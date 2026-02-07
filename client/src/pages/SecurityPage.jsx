@@ -1,0 +1,260 @@
+import { useState } from 'react';
+import { FiShield, FiSearch, FiAlertTriangle, FiCheck, FiInfo, FiDownload } from 'react-icons/fi';
+import { toast } from 'react-toastify';
+import { securityAPI } from '../services/api';
+
+const SEVERITY_STYLES = {
+    critical: 'severity-critical',
+    high: 'severity-high',
+    medium: 'severity-medium',
+    low: 'severity-low',
+    info: 'severity-info'
+};
+
+const SEVERITY_ICONS = {
+    critical: FiAlertTriangle,
+    high: FiAlertTriangle,
+    medium: FiInfo,
+    low: FiInfo,
+    info: FiInfo
+};
+
+function SecurityPage() {
+    const [url, setUrl] = useState('');
+    const [scanType, setScanType] = useState('full');
+    const [loading, setLoading] = useState(false);
+    const [results, setResults] = useState(null);
+
+    const handleScan = async () => {
+        if (!url) {
+            toast.error('Please enter a URL to scan');
+            return;
+        }
+
+        // Basic URL validation
+        try {
+            new URL(url);
+        } catch {
+            toast.error('Please enter a valid URL');
+            return;
+        }
+
+        setLoading(true);
+        setResults(null);
+
+        try {
+            const response = await securityAPI.scan({ url, scanType });
+            setResults(response.data);
+
+            if (response.data.securityScore >= 80) {
+                toast.success(`Security scan complete! Score: ${response.data.securityScore}/100`);
+            } else if (response.data.securityScore >= 50) {
+                toast.warning(`Security scan complete. Score: ${response.data.securityScore}/100`);
+            } else {
+                toast.error(`Security issues found. Score: ${response.data.securityScore}/100`);
+            }
+        } catch (error) {
+            const message = error.response?.data?.error || 'Scan failed';
+            toast.error(message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getScoreColor = (score) => {
+        if (score >= 80) return 'text-green-500';
+        if (score >= 60) return 'text-amber-500';
+        if (score >= 40) return 'text-orange-500';
+        return 'text-red-500';
+    };
+
+    const getScoreLabel = (score) => {
+        if (score >= 90) return 'Excellent';
+        if (score >= 80) return 'Good';
+        if (score >= 60) return 'Fair';
+        if (score >= 40) return 'Poor';
+        return 'Critical';
+    };
+
+    return (
+        <div className="max-w-4xl mx-auto space-y-6">
+            <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold">Security Scanner</h1>
+            </div>
+
+            {/* Scan Form */}
+            <div className="card">
+                <div className="flex gap-4 mb-4">
+                    <input
+                        type="text"
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                        placeholder="Enter URL to scan (e.g., https://example.com)"
+                        className="input-field flex-1"
+                        onKeyDown={(e) => e.key === 'Enter' && handleScan()}
+                    />
+
+                    <select
+                        value={scanType}
+                        onChange={(e) => setScanType(e.target.value)}
+                        className="input-field w-40"
+                    >
+                        <option value="full">Full Scan</option>
+                        <option value="headers">Headers Only</option>
+                        <option value="ssl">SSL Only</option>
+                        <option value="vulnerabilities">Vulnerabilities</option>
+                    </select>
+
+                    <button
+                        onClick={handleScan}
+                        disabled={loading}
+                        className="btn-primary flex items-center gap-2 px-6"
+                    >
+                        {loading ? (
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                            <>
+                                <FiSearch />
+                                Scan
+                            </>
+                        )}
+                    </button>
+                </div>
+
+                <p className="text-sm text-slate-400">
+                    Scans for OWASP Top 10 vulnerabilities, security headers, SSL/TLS configuration, and more.
+                </p>
+            </div>
+
+            {/* Loading State */}
+            {loading && (
+                <div className="card text-center py-12">
+                    <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                    <h3 className="text-lg font-medium">Scanning...</h3>
+                    <p className="text-slate-400 mt-2">Analyzing security headers, SSL, and vulnerabilities</p>
+                </div>
+            )}
+
+            {/* Results */}
+            {results && !loading && (
+                <div className="space-y-6 animate-slide-up">
+                    {/* Score Card */}
+                    <div className="card gradient-border">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h2 className="text-lg font-medium text-slate-300">Security Score</h2>
+                                <p className="text-sm text-slate-400 mt-1">{results.url}</p>
+                            </div>
+
+                            <div className="text-right">
+                                <div className={`text-5xl font-bold ${getScoreColor(results.securityScore)}`}>
+                                    {results.securityScore}
+                                </div>
+                                <div className={`text-sm ${getScoreColor(results.securityScore)}`}>
+                                    {getScoreLabel(results.securityScore)}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Summary */}
+                        <div className="grid grid-cols-5 gap-4 mt-6">
+                            {Object.entries({
+                                critical: 'Critical',
+                                high: 'High',
+                                medium: 'Medium',
+                                low: 'Low',
+                                info: 'Info'
+                            }).map(([key, label]) => (
+                                <div key={key} className="text-center">
+                                    <div className={`text-2xl font-bold ${results.summary[key] > 0 ? SEVERITY_STYLES[key].replace('severity-', 'text-').replace('-', '-') : 'text-slate-500'
+                                        }`}>
+                                        {results.summary[key] || 0}
+                                    </div>
+                                    <div className="text-xs text-slate-400">{label}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Findings */}
+                    {results.findings && results.findings.length > 0 && (
+                        <div className="card">
+                            <h3 className="text-lg font-medium mb-4">
+                                Findings ({results.findings.length})
+                            </h3>
+
+                            <div className="space-y-3">
+                                {results.findings.map((finding, index) => {
+                                    const Icon = SEVERITY_ICONS[finding.severity] || FiInfo;
+                                    return (
+                                        <div
+                                            key={index}
+                                            className={`p-4 rounded-lg ${SEVERITY_STYLES[finding.severity]}`}
+                                        >
+                                            <div className="flex items-start gap-3">
+                                                <Icon className="mt-0.5 shrink-0" />
+                                                <div className="flex-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="font-medium">{finding.title}</span>
+                                                        <span className="text-xs px-2 py-0.5 rounded bg-black/20">
+                                                            {finding.severity.toUpperCase()}
+                                                        </span>
+                                                        {finding.owasp_category && (
+                                                            <span className="text-xs px-2 py-0.5 rounded bg-black/20">
+                                                                OWASP {finding.owasp_category}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    {finding.description && (
+                                                        <p className="text-sm opacity-80 mt-1">{finding.description}</p>
+                                                    )}
+                                                    {finding.recommendation && (
+                                                        <p className="text-sm mt-2">
+                                                            <span className="font-medium">Fix: </span>
+                                                            {finding.recommendation}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* No issues found */}
+                    {results.findings && results.findings.length === 0 && (
+                        <div className="card text-center py-8">
+                            <FiCheck className="text-4xl text-green-500 mx-auto mb-4" />
+                            <h3 className="text-lg font-medium">No Issues Found</h3>
+                            <p className="text-slate-400 mt-2">Great job! No security issues were detected.</p>
+                        </div>
+                    )}
+
+                    {/* Recommendations */}
+                    {results.recommendations && results.recommendations.length > 0 && (
+                        <div className="card">
+                            <h3 className="text-lg font-medium mb-4">Recommendations</h3>
+                            <div className="space-y-2">
+                                {results.recommendations.map((rec, index) => (
+                                    <div key={index} className="flex items-start gap-3 p-3 bg-slate-800 rounded-lg">
+                                        <span className={`text-xs px-2 py-0.5 rounded ${SEVERITY_STYLES[rec.priority]}`}>
+                                            {rec.priority}
+                                        </span>
+                                        <div>
+                                            <p className="font-medium">{rec.title}</p>
+                                            <p className="text-sm text-slate-400">{rec.action}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default SecurityPage;
