@@ -189,6 +189,12 @@ DevHub/
 
 Contributions are welcome! Please read our contributing guidelines before submitting a PR.
 
+### 🐛 Troubleshooting
+- **Render Build Failed?** Ensure **Root Directory** is set to `server`.
+- **Vercel Build Failed?** Ensure you are using the latest `main` branch with `@tailwindcss/postcss`.
+- **Database Errors?** Run `database/policies.sql` to apply RLS policies safely.
+
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
