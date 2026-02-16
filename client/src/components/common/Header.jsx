@@ -44,7 +44,7 @@ function Header() {
                             </button>
                         </div>
                     ) : (
-                        <div className="flex items-center space-x-3">
+                        <div className="flex items-center gap-6">
                             <Link to="/login" className="text-slate-300 hover:text-white transition-colors">
                                 Login
                             </Link>

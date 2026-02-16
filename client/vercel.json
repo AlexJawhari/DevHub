@@ -1,35 +1,7 @@
 {
     "rewrites": [
         {
-            "source": "/.env",
-            "destination": "/404"
-        },
-        {
-            "source": "/.git/:path*",
-            "destination": "/404"
-        },
-        {
-            "source": "/package.json",
-            "destination": "/404"
-        },
-        {
-            "source": "/package-lock.json",
-            "destination": "/404"
-        },
-        {
-            "source": "/yarn.lock",
-            "destination": "/404"
-        },
-        {
-            "source": "/robots.txt",
-            "destination": "/robots.txt"
-        },
-        {
-            "source": "/sitemap.xml",
-            "destination": "/sitemap.xml"
-        },
-        {
-            "source": "/(.*)",
+            "source": "/((?!\\.env|\\.git|package\\.json|package-lock\\.json|yarn\\.lock|.*\\.lock|.*\\.config\\.js).*)",
             "destination": "/index.html"
         }
     ],
@@ -44,6 +16,10 @@
                 {
                     "key": "X-Content-Type-Options",
                     "value": "nosniff"
+                },
+                {
+                    "key": "X-XSS-Protection",
+                    "value": "1; mode=block"
                 },
                 {
                     "key": "Referrer-Policy",

@@ -17,6 +17,8 @@ const errorHandler = require('./middleware/errorHandler');
 const { initMonitoringJobs } = require('./jobs/monitoringJobs');
 
 const app = express();
+// Trust proxy is required for rate limiting behind proxies (Render/Vercel)
+app.set('trust proxy', 1);
 const server = http.createServer(app);
 
 // Allowed origins
