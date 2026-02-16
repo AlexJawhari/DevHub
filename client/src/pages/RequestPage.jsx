@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiSend, FiPlus, FiTrash2, FiClock, FiDatabase } from 'react-icons/fi';
+import { FiSend, FiPlus, FiTrash2, FiClock, FiDatabase, FiZap, FiInfo } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { useRequestStore } from '../store/requestStore';
 import { requestAPI } from '../services/api';
@@ -46,11 +46,20 @@ function RequestPage() {
             const result = await requestAPI.proxy(requestData);
             setResponse(result.data);
         } catch (error) {
-            const message = error.response?.data?.error || error.message;
+            let message;
+            let hint;
+            if (error.code === 'ERR_NETWORK' || !error.response) {
+                message = 'Could not reach the DevHub backend server.';
+                hint = 'The backend may be starting up (free tier cold start takes ~30s). Please wait and try again.';
+            } else {
+                message = error.response?.data?.error || error.message;
+                hint = error.response?.data?.hint || null;
+            }
             toast.error(`Request failed: ${message}`);
             setResponse({
                 error: true,
                 message,
+                hint,
                 status: error.response?.status
             });
         } finally {
@@ -59,8 +68,25 @@ function RequestPage() {
     };
 
     return (
-        <div className="h-full flex flex-col gap-4">
-            <h1 className="text-2xl font-bold">API Tester</h1>
+        <div className="h-full flex flex-col gap-5">
+            <div>
+                <h1 className="text-2xl font-bold">API Tester</h1>
+                <div className="flex items-center gap-3 mt-2 text-sm text-slate-400">
+                    <FiInfo className="shrink-0" />
+                    <span>Enter any public API URL and click Send.</span>
+                    <button
+                        onClick={() => {
+                            setMethod('GET');
+                            setUrl('https://jsonplaceholder.typicode.com/posts');
+                            toast.info('Example loaded — click Send!');
+                        }}
+                        className="inline-flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors"
+                    >
+                        <FiZap className="text-xs" />
+                        Try Example
+                    </button>
+                </div>
+            </div>
 
             {/* Request URL Bar */}
             <div className="flex gap-2">
@@ -78,7 +104,7 @@ function RequestPage() {
                     type="text"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
-                    placeholder="Enter request URL (e.g., https://api.example.com/users)"
+                    placeholder="https://api.example.com/users"
                     className="input-field flex-1"
                     onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 />
@@ -99,7 +125,7 @@ function RequestPage() {
                 </button>
             </div>
 
-            <div className="flex-1 grid lg:grid-cols-2 gap-4 min-h-0">
+            <div className="flex-1 grid lg:grid-cols-2 gap-6 min-h-0">
                 {/* Request Configuration */}
                 <div className="card flex flex-col min-h-0">
                     {/* Tabs */}
@@ -109,8 +135,8 @@ function RequestPage() {
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
                                 className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === tab
-                                        ? 'border-blue-500 text-blue-400'
-                                        : 'border-transparent text-slate-400 hover:text-white'
+                                    ? 'border-blue-500 text-blue-400'
+                                    : 'border-transparent text-slate-400 hover:text-white'
                                     }`}
                             >
                                 {tab.charAt(0).toUpperCase() + tab.slice(1)}

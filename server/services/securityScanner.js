@@ -2,6 +2,18 @@ const axios = require('axios');
 const tls = require('tls');
 const { URL } = require('url');
 
+// OWASP Top 10 (2025) Reference
+// A01 - Broken Access Control
+// A02 - Security Misconfiguration
+// A03 - Software Supply Chain Failures
+// A04 - Cryptographic Failures
+// A05 - Injection
+// A06 - Insecure Design
+// A07 - Authentication Failures
+// A08 - Software/Data Integrity Failures
+// A09 - Logging & Alerting Failures
+// A10 - Mishandling Exceptional Conditions
+
 // Security header checks with severity and recommendations
 const SECURITY_HEADERS = {
     'strict-transport-security': {
@@ -100,7 +112,7 @@ async function checkSecurityHeaders(url) {
                     title: `Missing ${info.name}`,
                     description: info.description,
                     recommendation: info.recommendation,
-                    owasp_category: 'A05'
+                    owasp_category: 'A02'
                 });
             } else {
                 // Check for weak configurations
@@ -113,7 +125,8 @@ async function checkSecurityHeaders(url) {
                             title: 'Weak HSTS Configuration',
                             description: `HSTS max-age is ${maxAge} seconds. Recommended minimum is 1 year (31536000)`,
                             recommendation: 'Increase max-age to at least 31536000',
-                            owasp_category: 'A05'
+                            owasp_category: 'A02',
+                            cwe_id: 'CWE-523'
                         });
                     }
                 }
@@ -125,7 +138,8 @@ async function checkSecurityHeaders(url) {
                         title: 'Deprecated X-Frame-Options Value',
                         description: 'ALLOW-FROM is deprecated and not supported by modern browsers',
                         recommendation: 'Use CSP frame-ancestors directive instead',
-                        owasp_category: 'A05'
+                        owasp_category: 'A02',
+                        cwe_id: 'CWE-1021'
                     });
                 }
             }
@@ -139,7 +153,8 @@ async function checkSecurityHeaders(url) {
                 title: 'Server Header Present',
                 description: `Server header reveals: ${headers['server']}`,
                 recommendation: 'Consider removing or obfuscating the Server header',
-                owasp_category: 'A05'
+                owasp_category: 'A02',
+                cwe_id: 'CWE-200'
             });
         }
 
@@ -150,7 +165,8 @@ async function checkSecurityHeaders(url) {
                 title: 'X-Powered-By Header Present',
                 description: `Technology disclosed: ${headers['x-powered-by']}`,
                 recommendation: 'Remove the X-Powered-By header',
-                owasp_category: 'A05'
+                owasp_category: 'A02',
+                cwe_id: 'CWE-200'
             });
         }
 
@@ -351,7 +367,7 @@ async function scanVulnerabilities(url) {
                     description: 'Application may be vulnerable to SQL injection attacks',
                     evidence: `Payload: ${payload}`,
                     recommendation: 'Use parameterized queries and input validation',
-                    owasp_category: 'A03',
+                    owasp_category: 'A05',
                     cwe_id: 'CWE-89'
                 });
                 break; // One finding is enough
@@ -379,7 +395,7 @@ async function scanVulnerabilities(url) {
                     description: 'User input is reflected without proper encoding',
                     evidence: `Payload: ${payload}`,
                     recommendation: 'Encode all user input before rendering',
-                    owasp_category: 'A03',
+                    owasp_category: 'A05',
                     cwe_id: 'CWE-79'
                 });
                 break;
@@ -402,7 +418,7 @@ async function scanVulnerabilities(url) {
                     title: `${name} Possibly Exposed`,
                     description: `Response may contain sensitive data: ${name}`,
                     recommendation: 'Remove sensitive data from responses and use environment variables',
-                    owasp_category: 'A01',
+                    owasp_category: 'A04',
                     cwe_id: 'CWE-200'
                 });
             }
@@ -432,11 +448,150 @@ async function scanVulnerabilities(url) {
                     title: 'Sensitive Endpoint Accessible',
                     description: `${endpoint} is publicly accessible`,
                     recommendation: 'Restrict access to sensitive endpoints',
-                    owasp_category: 'A05'
+                    owasp_category: 'A02'
                 });
             }
         } catch {
             // Expected - endpoint blocked or not found
+        }
+    }
+
+    return findings;
+}
+
+/**
+ * Check for supply chain exposure (OWASP A03:2025)
+ */
+async function scanSupplyChain(url) {
+    const findings = [];
+    const parsed = new URL(url);
+
+    const supplyChainPaths = [
+        '/package.json', '/package-lock.json', '/yarn.lock',
+        '/composer.json', '/composer.lock', '/requirements.txt',
+        '/Pipfile.lock', '/Gemfile.lock', '/go.sum',
+        '/node_modules/.package-lock.json',
+        '/.npmrc', '/.yarnrc'
+    ];
+
+    for (const path of supplyChainPaths) {
+        try {
+            const testUrl = `${parsed.origin}${path}`;
+            const response = await axios.get(testUrl, {
+                timeout: 3000,
+                validateStatus: () => true
+            });
+
+            if (response.status === 200 && response.data && String(response.data).length > 10) {
+                findings.push({
+                    category: 'supply_chain',
+                    severity: 'high',
+                    title: `Dependency File Publicly Accessible: ${path}`,
+                    description: `${path} is publicly accessible, exposing dependency information to attackers`,
+                    recommendation: 'Block public access to dependency/lock files via server configuration',
+                    owasp_category: 'A03',
+                    cwe_id: 'CWE-538'
+                });
+            }
+        } catch {
+            // Expected - endpoint blocked or not found
+        }
+    }
+
+    return findings;
+}
+
+/**
+ * Check for error handling issues (OWASP A10:2025)
+ */
+async function scanErrorHandling(url) {
+    const findings = [];
+    const parsed = new URL(url);
+
+    const errorPaths = [
+        '/this-page-does-not-exist-404-test',
+        '/error', '/500', '/debug',
+        '/trace', '/actuator/health'
+    ];
+
+    for (const path of errorPaths) {
+        try {
+            const testUrl = `${parsed.origin}${path}`;
+            const response = await axios.get(testUrl, {
+                timeout: 3000,
+                validateStatus: () => true
+            });
+
+            const body = String(response.data);
+
+            // Check for stack traces or verbose error output
+            const stackPatterns = [
+                /at\s+\w+\s+\(.*\.js:\d+:\d+\)/i,
+                /Traceback\s+\(most recent/i,
+                /Exception in thread/i,
+                /Fatal error:/i,
+                /Stack trace:/i,
+                /vendor\/laravel/i,
+                /SQLSTATE\[/i
+            ];
+
+            if (stackPatterns.some(p => p.test(body))) {
+                findings.push({
+                    category: 'error_handling',
+                    severity: 'medium',
+                    title: 'Verbose Error Output Detected',
+                    description: `${path} returns stack traces or debug information`,
+                    recommendation: 'Configure production error pages that do not expose internal details',
+                    owasp_category: 'A10',
+                    cwe_id: 'CWE-209'
+                });
+                break;
+            }
+        } catch {
+            // Expected
+        }
+    }
+
+    return findings;
+}
+
+/**
+ * Check for authentication weaknesses (OWASP A07:2025)
+ */
+async function scanAuthWeaknesses(url) {
+    const findings = [];
+    const parsed = new URL(url);
+
+    // Check common login/auth endpoints for rate limiting headers
+    const authPaths = ['/login', '/api/login', '/auth/login', '/api/auth/login', '/signin'];
+
+    for (const path of authPaths) {
+        try {
+            const testUrl = `${parsed.origin}${path}`;
+            const response = await axios.post(testUrl, { username: 'test', password: 'test' }, {
+                timeout: 3000,
+                validateStatus: () => true
+            });
+
+            // Check if rate limiting headers are present
+            const hasRateLimit = response.headers['x-ratelimit-limit'] ||
+                response.headers['ratelimit-limit'] ||
+                response.headers['retry-after'];
+
+            if (response.status !== 404 && !hasRateLimit) {
+                findings.push({
+                    category: 'authentication',
+                    severity: 'medium',
+                    title: 'Login Endpoint Missing Rate Limiting',
+                    description: `${path} does not appear to have rate limiting headers`,
+                    recommendation: 'Add rate limiting to authentication endpoints to prevent brute-force attacks',
+                    owasp_category: 'A07',
+                    cwe_id: 'CWE-307'
+                });
+                break;
+            }
+        } catch {
+            // Expected
         }
     }
 
@@ -583,7 +738,7 @@ async function analyzeCORS(url) {
                     title: 'Dangerous CORS Configuration',
                     description: 'Wildcard origin (*) with credentials allowed',
                     recommendation: 'Never use wildcard with credentials=true',
-                    owasp_category: 'A05'
+                    owasp_category: 'A02'
                 });
             } else {
                 findings.push({
@@ -603,7 +758,7 @@ async function analyzeCORS(url) {
                 title: 'CORS Reflects Origin',
                 description: 'Server reflects any origin, allowing cross-origin requests from anywhere',
                 recommendation: 'Validate origins against a whitelist',
-                owasp_category: 'A05'
+                owasp_category: 'A02'
             });
         }
 
@@ -642,6 +797,9 @@ module.exports = {
     checkSecurityHeaders,
     validateSSL,
     scanVulnerabilities,
+    scanSupplyChain,
+    scanErrorHandling,
+    scanAuthWeaknesses,
     analyzeJWT,
     analyzeCORS,
     calculateSecurityScore

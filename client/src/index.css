@@ -160,7 +160,7 @@ body {
 
 /* Card styles */
 .card {
-  @apply bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-4;
+  @apply bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-5;
 }
 
 /* Animations */

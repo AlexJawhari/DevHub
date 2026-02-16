@@ -25,21 +25,21 @@ function Sidebar() {
     const visibleItems = navItems.filter(item => item.public || token);
 
     return (
-        <aside className="w-16 lg:w-56 glass border-r border-slate-700 flex flex-col py-4 shrink-0">
-            <nav className="flex-1 space-y-1 px-2">
+        <aside className="w-16 lg:w-56 glass border-r border-slate-700 flex flex-col py-6 shrink-0">
+            <nav className="flex-1 space-y-1.5 px-2">
                 {visibleItems.map((item) => (
                     <NavLink
                         key={item.path}
                         to={item.path}
                         className={({ isActive }) =>
-                            `flex items-center space-x-3 px-3 py-3 rounded-lg transition-all ${isActive
+                            `flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all ${isActive
                                 ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border-l-2 border-blue-500'
                                 : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
                             }`
                         }
                     >
                         <item.icon className="text-xl shrink-0" />
-                        <span className="hidden lg:block">{item.label}</span>
+                        <span className="hidden lg:block text-sm">{item.label}</span>
                     </NavLink>
                 ))}
             </nav>

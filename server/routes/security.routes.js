@@ -7,6 +7,9 @@ const {
     checkSecurityHeaders,
     validateSSL,
     scanVulnerabilities,
+    scanSupplyChain,
+    scanErrorHandling,
+    scanAuthWeaknesses,
     analyzeJWT,
     analyzeCORS,
     calculateSecurityScore
@@ -72,6 +75,27 @@ router.post('/scan', scanLimiter, optionalAuth, [
         if (scanType === 'full') {
             results.cors = await analyzeCORS(url);
             allFindings.push(...(results.cors.findings || []));
+        }
+
+        // Supply chain checks (A03:2025)
+        if (scanType === 'full') {
+            const supplyChainFindings = await scanSupplyChain(url);
+            results.supplyChain = { findings: supplyChainFindings };
+            allFindings.push(...supplyChainFindings);
+        }
+
+        // Error handling checks (A10:2025)
+        if (scanType === 'full') {
+            const errorFindings = await scanErrorHandling(url);
+            results.errorHandling = { findings: errorFindings };
+            allFindings.push(...errorFindings);
+        }
+
+        // Authentication weakness checks (A07:2025)
+        if (scanType === 'full') {
+            const authFindings = await scanAuthWeaknesses(url);
+            results.authentication = { findings: authFindings };
+            allFindings.push(...authFindings);
         }
 
         // Calculate score

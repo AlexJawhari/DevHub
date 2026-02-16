@@ -84,7 +84,7 @@ function SecurityPage() {
 
             {/* Scan Form */}
             <div className="card">
-                <div className="flex gap-4 mb-4">
+                <div className="flex gap-4 mb-3">
                     <input
                         type="text"
                         value={url}
@@ -97,7 +97,7 @@ function SecurityPage() {
                     <select
                         value={scanType}
                         onChange={(e) => setScanType(e.target.value)}
-                        className="input-field w-40"
+                        className="input-field w-48"
                     >
                         <option value="full">Full Scan</option>
                         <option value="headers">Headers Only</option>
@@ -122,8 +122,28 @@ function SecurityPage() {
                 </div>
 
                 <p className="text-sm text-slate-400">
-                    Scans for OWASP Top 10 vulnerabilities, security headers, SSL/TLS configuration, and more.
+                    Scans for OWASP Top 10 (2025) vulnerabilities, security headers, SSL/TLS configuration, and more.
                 </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+                    {[
+                        { key: 'full', label: 'Full Scan', desc: 'Headers + SSL + Vulnerabilities + CORS' },
+                        { key: 'headers', label: 'Headers Only', desc: 'Security header analysis' },
+                        { key: 'ssl', label: 'SSL Only', desc: 'Certificate & TLS validation' },
+                        { key: 'vulnerabilities', label: 'Vulnerabilities', desc: 'SQLi, XSS, sensitive data exposure' }
+                    ].map((t) => (
+                        <div
+                            key={t.key}
+                            onClick={() => setScanType(t.key)}
+                            className={`p-3 rounded-lg border cursor-pointer transition-all text-center ${scanType === t.key
+                                    ? 'bg-purple-500/15 border-purple-500/50 text-purple-300'
+                                    : 'border-slate-700 hover:border-slate-600 text-slate-400'
+                                }`}
+                        >
+                            <div className="text-sm font-medium">{t.label}</div>
+                            <div className="text-xs mt-1 opacity-70">{t.desc}</div>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             {/* Loading State */}

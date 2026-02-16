@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FiSend, FiShield, FiActivity, FiZap, FiLock, FiTrendingUp } from 'react-icons/fi';
+import { FiSend, FiShield, FiActivity, FiZap, FiLock, FiTrendingUp, FiArrowRight } from 'react-icons/fi';
 
 const features = [
     {
@@ -49,7 +49,7 @@ const stats = [
 
 function Home() {
     return (
-        <div className="max-w-6xl mx-auto space-y-16">
+        <div className="max-w-6xl mx-auto space-y-20">
             {/* Hero Section */}
             <section className="text-center py-12 animate-slide-up">
                 <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 mb-6">
@@ -80,6 +80,54 @@ function Home() {
                         <FiShield />
                         Security Scan
                     </Link>
+                </div>
+            </section>
+
+            {/* Quick Start Section */}
+            <section className="card gradient-border">
+                <h2 className="text-xl font-bold text-center mb-6">Get Started in 3 Steps</h2>
+                <div className="grid md:grid-cols-3 gap-6">
+                    {[
+                        {
+                            step: '1',
+                            icon: FiSend,
+                            title: 'Test Your API',
+                            desc: 'Enter any API URL and send a request. View formatted responses instantly.',
+                            link: '/request',
+                            cta: 'Open Tester'
+                        },
+                        {
+                            step: '2',
+                            icon: FiShield,
+                            title: 'Run a Security Scan',
+                            desc: 'Scan for OWASP Top 10 vulnerabilities, weak headers, and SSL issues.',
+                            link: '/security',
+                            cta: 'Start Scan'
+                        },
+                        {
+                            step: '3',
+                            icon: FiActivity,
+                            title: 'Monitor Uptime',
+                            desc: 'Track your API\'s availability 24/7 with real-time alerts.',
+                            link: '/monitoring',
+                            cta: 'Set Up Monitor'
+                        }
+                    ].map((item) => (
+                        <Link
+                            key={item.step}
+                            to={item.link}
+                            className="group text-center p-4 rounded-xl hover:bg-slate-700/30 transition-all"
+                        >
+                            <div className="w-10 h-10 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold mb-3">
+                                {item.step}
+                            </div>
+                            <h3 className="font-semibold mb-1">{item.title}</h3>
+                            <p className="text-sm text-slate-400 mb-3">{item.desc}</p>
+                            <span className="inline-flex items-center gap-1 text-sm text-blue-400 group-hover:text-blue-300">
+                                {item.cta} <FiArrowRight className="text-xs" />
+                            </span>
+                        </Link>
+                    ))}
                 </div>
             </section>
 

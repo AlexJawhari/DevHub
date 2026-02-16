@@ -1,3 +1,5 @@
+import { FiAlertCircle } from 'react-icons/fi';
+
 function ResponseViewer({ response, loading }) {
     if (loading) {
         return (
@@ -20,9 +22,17 @@ function ResponseViewer({ response, loading }) {
 
     if (response.error) {
         return (
-            <div className="p-4 severity-critical rounded-lg">
-                <p className="font-medium">Request Failed</p>
-                <p className="text-sm mt-1">{response.message}</p>
+            <div className="p-5 severity-critical rounded-lg space-y-2">
+                <div className="flex items-center gap-2">
+                    <FiAlertCircle className="shrink-0" />
+                    <p className="font-medium">Request Failed</p>
+                </div>
+                <p className="text-sm opacity-90">{response.message}</p>
+                {response.hint && (
+                    <p className="text-sm opacity-70 border-t border-red-500/20 pt-2 mt-2">
+                        💡 {response.hint}
+                    </p>
+                )}
             </div>
         );
     }

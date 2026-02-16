@@ -8,7 +8,7 @@ function Layout() {
             <Header />
             <div className="flex flex-1">
                 <Sidebar />
-                <main className="flex-1 p-6 overflow-auto">
+                <main className="flex-1 p-6 lg:p-8 overflow-auto">
                     <Outlet />
                 </main>
             </div>

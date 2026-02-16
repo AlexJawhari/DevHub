@@ -47,8 +47,17 @@ router.post('/proxy', proxyLimiter, optionalAuth, async (req, res) => {
             return res.status(400).json({ error: 'URL is required' });
         }
 
-        if (!isValidUrl(url)) {
-            return res.status(400).json({ error: 'Invalid or blocked URL' });
+        // Auto-prepend https:// if no protocol is provided
+        let normalizedUrl = url.trim();
+        if (!/^https?:\/\//i.test(normalizedUrl)) {
+            normalizedUrl = 'https://' + normalizedUrl;
+        }
+
+        if (!isValidUrl(normalizedUrl)) {
+            return res.status(400).json({
+                error: 'Invalid or blocked URL',
+                hint: 'Make sure the URL starts with http:// or https:// and points to a public server.'
+            });
         }
 
         const startTime = Date.now();
@@ -60,7 +69,7 @@ router.post('/proxy', proxyLimiter, optionalAuth, async (req, res) => {
 
         const response = await axios({
             method: method.toUpperCase(),
-            url,
+            url: normalizedUrl,
             headers: cleanHeaders,
             data: requestBody,
             timeout: Math.min(timeout, 30000),
@@ -94,7 +103,7 @@ router.post('/proxy', proxyLimiter, optionalAuth, async (req, res) => {
             await supabase.from('request_history').insert({
                 user_id: req.user.userId,
                 method: method.toUpperCase(),
-                url,
+                url: normalizedUrl,
                 status_code: response.status,
                 response_time: responseTime,
                 response_size: responseStr.length
@@ -113,13 +122,34 @@ router.post('/proxy', proxyLimiter, optionalAuth, async (req, res) => {
         });
     } catch (error) {
         if (error.code === 'ECONNABORTED') {
-            return res.status(408).json({ error: 'Request timeout' });
+            return res.status(408).json({
+                error: 'Request timed out',
+                hint: 'The target server took too long to respond. Try increasing the timeout or check if the URL is correct.'
+            });
         }
         if (error.code === 'ENOTFOUND') {
-            return res.status(404).json({ error: 'Host not found' });
+            return res.status(404).json({
+                error: `Host not found: could not resolve the domain`,
+                hint: 'Double-check the URL for typos. Make sure the domain exists.'
+            });
+        }
+        if (error.code === 'ECONNREFUSED') {
+            return res.status(502).json({
+                error: 'Connection refused by the target server',
+                hint: 'The server is not accepting connections on this port. Verify the URL and port.'
+            });
+        }
+        if (error.code === 'ERR_TLS_CERT_ALTNAME_INVALID' || error.code === 'DEPTH_ZERO_SELF_SIGNED_CERT') {
+            return res.status(502).json({
+                error: 'SSL certificate error on the target server',
+                hint: 'The target has an invalid or self-signed SSL certificate.'
+            });
         }
         console.error('Proxy error:', error.message);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({
+            error: error.message,
+            hint: 'An unexpected error occurred while proxying the request.'
+        });
     }
 });
 

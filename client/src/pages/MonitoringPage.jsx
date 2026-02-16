@@ -38,6 +38,7 @@ function MonitoringPage() {
     const handleSelectEndpoint = (endpoint) => {
         setSelectedEndpoint(endpoint);
         fetchStats(endpoint.id);
+        fetchResults(endpoint.id);
     };
 
     const handleDelete = async (id) => {
@@ -53,6 +54,23 @@ function MonitoringPage() {
             toast.success('Endpoint removed');
         } catch (error) {
             toast.error('Failed to remove endpoint');
+        }
+    };
+
+    const [chartData, setChartData] = useState([]);
+
+    const fetchResults = async (endpointId) => {
+        try {
+            const response = await monitoringAPI.getResults(endpointId);
+            const results = response.data?.results || [];
+            setChartData(
+                results.slice(-50).map((r) => ({
+                    time: new Date(r.checked_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    ms: r.response_time || 0
+                }))
+            );
+        } catch {
+            setChartData([]);
         }
     };
 
@@ -83,18 +101,20 @@ function MonitoringPage() {
                     <h3 className="text-lg font-medium mb-4">Monitored Endpoints</h3>
 
                     {endpoints.length === 0 ? (
-                        <p className="text-slate-400 text-center py-8">
-                            No endpoints monitored yet. Add one to get started.
-                        </p>
+                        <div className="text-center py-8">
+                            <FiActivity className="text-3xl text-slate-500 mx-auto mb-3" />
+                            <p className="text-slate-400 text-sm">No endpoints monitored yet.</p>
+                            <p className="text-slate-500 text-xs mt-1">Click &ldquo;Add Endpoint&rdquo; to start monitoring an API.</p>
+                        </div>
                     ) : (
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                             {endpoints.map((endpoint) => (
                                 <div
                                     key={endpoint.id}
                                     onClick={() => handleSelectEndpoint(endpoint)}
                                     className={`p-3 rounded-lg cursor-pointer transition-all ${selectedEndpoint?.id === endpoint.id
-                                            ? 'bg-blue-500/20 border border-blue-500/50'
-                                            : 'bg-slate-800 hover:bg-slate-700'
+                                        ? 'bg-blue-500/20 border border-blue-500/50'
+                                        : 'bg-slate-800 hover:bg-slate-700'
                                         }`}
                                 >
                                     <div className="flex items-center justify-between">
@@ -146,7 +166,7 @@ function MonitoringPage() {
                                 {['24h', '7d', '30d'].map((period) => (
                                     <div key={period} className="bg-slate-800 rounded-lg p-4 text-center">
                                         <div className={`text-2xl font-bold ${(stats.stats[period]?.uptime || 0) >= 99 ? 'text-green-500' :
-                                                (stats.stats[period]?.uptime || 0) >= 95 ? 'text-amber-500' : 'text-red-500'
+                                            (stats.stats[period]?.uptime || 0) >= 95 ? 'text-amber-500' : 'text-red-500'
                                             }`}>
                                             {stats.stats[period]?.uptime || 0}%
                                         </div>
@@ -158,13 +178,27 @@ function MonitoringPage() {
                                 ))}
                             </div>
 
-                            {/* Response Time Chart Placeholder */}
+                            {/* Response Time Chart */}
                             <div className="bg-slate-800 rounded-lg p-4">
                                 <h4 className="text-sm font-medium mb-4">Response Time (Last 24h)</h4>
-                                <div className="h-48 flex items-center justify-center text-slate-500">
-                                    <FiActivity className="text-4xl" />
-                                    <span className="ml-2">Chart data loading...</span>
-                                </div>
+                                {chartData.length > 0 ? (
+                                    <ResponsiveContainer width="100%" height={192}>
+                                        <LineChart data={chartData}>
+                                            <XAxis dataKey="time" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+                                            <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} unit="ms" width={50} />
+                                            <Tooltip
+                                                contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: 8 }}
+                                                labelStyle={{ color: '#94a3b8' }}
+                                            />
+                                            <Line type="monotone" dataKey="ms" stroke="#3b82f6" strokeWidth={2} dot={false} />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                ) : (
+                                    <div className="h-48 flex items-center justify-center text-slate-500">
+                                        <FiActivity className="text-4xl" />
+                                        <span className="ml-2">No check data yet</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ) : (
