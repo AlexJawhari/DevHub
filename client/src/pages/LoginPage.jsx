@@ -4,10 +4,12 @@ import { FiMail, FiLock, FiArrowRight, FiShield } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { authAPI } from '../services/api';
 import { useAuthStore } from '../store/authStore';
+import EducationModal from '../components/common/EducationModal';
 
 function LoginPage() {
     const navigate = useNavigate();
     const login = useAuthStore((state) => state.login);
+    const [showEducation, setShowEducation] = useState(false);
 
     const [formData, setFormData] = useState({
         email: '',
@@ -48,8 +50,8 @@ function LoginPage() {
                     <p className="text-slate-400 mt-2">Sign in to your account</p>
                 </div>
 
-                <div className="card">
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="card border-t-4 border-t-purple-500 shadow-xl shadow-purple-900/10">
+                    <form onSubmit={handleSubmit} className="space-y-6 p-2">
                         <div>
                             <label className="block text-sm font-medium text-slate-300 mb-2">
                                 Email
@@ -106,8 +108,23 @@ function LoginPage() {
                             Sign up
                         </Link>
                     </div>
+                    <div className="mt-8 pt-6 border-t border-slate-700/50 text-center">
+                        <button
+                            onClick={() => setShowEducation(true)}
+                            className="text-xs text-slate-500 hover:text-slate-300 transition-colors flex items-center justify-center gap-1 mx-auto"
+                        >
+                            <FiShield className="text-xs" />
+                            Why do I need an account?
+                        </button>
+                    </div>
                 </div>
             </div>
+
+            <EducationModal
+                isOpen={showEducation}
+                onClose={() => setShowEducation(false)}
+                topic="api"
+            />
         </div>
     );
 }

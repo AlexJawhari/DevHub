@@ -75,8 +75,8 @@ function RegisterPage() {
                     <p className="text-slate-400 mt-2">Start securing your APIs today</p>
                 </div>
 
-                <div className="card">
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="card border-t-4 border-t-blue-500 shadow-xl shadow-blue-900/10">
+                    <form onSubmit={handleSubmit} className="space-y-5 p-2">
                         <div>
                             <label className="block text-sm font-medium text-slate-300 mb-2">
                                 Username
@@ -136,8 +136,8 @@ function RegisterPage() {
                                         <div
                                             key={i}
                                             className={`h-1 flex-1 rounded-full transition-colors ${passwordStrength >= i
-                                                    ? passwordStrength === 4 ? 'bg-green-500' : 'bg-amber-500'
-                                                    : 'bg-slate-700'
+                                                ? passwordStrength === 4 ? 'bg-green-500' : 'bg-amber-500'
+                                                : 'bg-slate-700'
                                                 }`}
                                         />
                                     ))}

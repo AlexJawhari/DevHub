@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { FiSend, FiPlus, FiTrash2, FiClock, FiDatabase, FiZap, FiInfo } from 'react-icons/fi';
+import { FiSend, FiPlus, FiTrash2, FiClock, FiDatabase, FiZap, FiInfo, FiSave, FiX } from 'react-icons/fi';
 import { toast } from 'react-toastify';
+import { useAuthStore } from '../store/authStore';
 import { useRequestStore } from '../store/requestStore';
 import { requestAPI } from '../services/api';
 import ResponseViewer from '../components/request/ResponseViewer';
@@ -30,7 +31,39 @@ function RequestPage() {
         buildRequest
     } = useRequestStore();
 
+    const { user } = useAuthStore();
     const [activeTab, setActiveTab] = useState('params');
+    const [showSaveModal, setShowSaveModal] = useState(false);
+    const [requestName, setRequestName] = useState('');
+
+    const handleSave = async () => {
+        if (!user) {
+            toast.error('Please login to save requests');
+            return;
+        }
+        if (!requestName.trim()) {
+            toast.error('Please enter a name');
+            return;
+        }
+
+        try {
+            await requestAPI.save({
+                name: requestName,
+                method,
+                url,
+                headers: headers.reduce((acc, h) => h.enabled && h.key ? { ...acc, [h.key]: h.value } : acc, {}),
+                body,
+                query_params: queryParams.reduce((acc, p) => p.enabled && p.key ? { ...acc, [p.key]: p.value } : acc, {}),
+                auth_type: authType,
+                auth_config: authConfig
+            });
+            toast.success('Request saved successfully!');
+            setShowSaveModal(false);
+            setRequestName('');
+        } catch (error) {
+            toast.error(error.response?.data?.error || 'Failed to save request');
+        }
+    };
 
     const handleSend = async () => {
         if (!url) {
@@ -108,6 +141,15 @@ function RequestPage() {
                     className="input-field flex-1"
                     onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 />
+
+                <button
+                    onClick={() => setShowSaveModal(true)}
+                    className="btn-secondary flex items-center gap-2 px-6"
+                    title="Save Request"
+                >
+                    <FiSave />
+                    <span className="hidden sm:inline">Save</span>
+                </button>
 
                 <button
                     onClick={handleSend}
@@ -346,7 +388,51 @@ function RequestPage() {
                     </div>
                 </div>
             </div>
-        </div>
+
+
+            {/* Save Request Modal */}
+            {
+                showSaveModal && (
+                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                        <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 w-full max-w-sm animate-slide-up">
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-lg font-bold">Save Request</h3>
+                                <button onClick={() => setShowSaveModal(false)} className="text-slate-400 hover:text-white">
+                                    <FiX />
+                                </button>
+                            </div>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="text-sm text-slate-400 mb-1 block">Request Name</label>
+                                    <input
+                                        type="text"
+                                        value={requestName}
+                                        onChange={(e) => setRequestName(e.target.value)}
+                                        placeholder="e.g. Get User Profile"
+                                        className="input-field w-full"
+                                        autoFocus
+                                    />
+                                </div>
+                                <div className="flex justify-end gap-2">
+                                    <button
+                                        onClick={() => setShowSaveModal(false)}
+                                        className="btn-ghost"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleSave}
+                                        className="btn-primary"
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+        </div >
     );
 }
 

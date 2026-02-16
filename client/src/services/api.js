@@ -3,6 +3,21 @@ import { useAuthStore } from '../store/authStore';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
+// Critical Check: Detect if user accidentally set API_URL to the GitHub repo
+if (API_URL.includes('github.com')) {
+    console.error('CRITICAL MISCONFIGURATION: VITE_API_URL is set to a GitHub URL instead of your backend!');
+    setTimeout(() => {
+        // Use a simple alert or toast if available (we'll import toast in a sec)
+        // For now, console error is key, but let's try to notify user visibly
+        import('react-toastify').then(({ toast }) => {
+            toast.error(
+                'CRITICAL: API Configuration Error. You are pointing to GitHub, not your backend. Please check Vercel settings.',
+                { autoClose: false, closeOnClick: false }
+            );
+        });
+    }, 1000);
+}
+
 const api = axios.create({
     baseURL: API_URL,
     timeout: 30000,
