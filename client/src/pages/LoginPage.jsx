@@ -35,7 +35,13 @@ function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="min-h-screen flex items-center justify-center p-4 relative">
+            <Link
+                to="/"
+                className="absolute top-8 left-8 text-slate-400 hover:text-white flex items-center gap-2 transition-colors py-2 px-4 rounded-lg hover:bg-slate-800"
+            >
+                <span>←</span> Back to Home
+            </Link>
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
                     <Link to="/" className="inline-flex items-center space-x-3 mb-6">

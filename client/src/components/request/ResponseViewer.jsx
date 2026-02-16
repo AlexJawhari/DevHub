@@ -22,16 +22,32 @@ function ResponseViewer({ response, loading }) {
 
     if (response.error) {
         return (
-            <div className="p-5 severity-critical rounded-lg space-y-2">
-                <div className="flex items-center gap-2">
-                    <FiAlertCircle className="shrink-0" />
-                    <p className="font-medium">Request Failed</p>
+            <div className="p-6 bg-red-900/10 border border-red-500/20 rounded-xl space-y-4">
+                <div className="flex items-center gap-3 text-red-400">
+                    <FiAlertCircle className="text-xl shrink-0" />
+                    <h3 className="font-bold text-lg">Request Failed</h3>
                 </div>
-                <p className="text-sm opacity-90">{response.message}</p>
+
+                <p className="text-slate-300 leading-relaxed pl-1">{response.message}</p>
+
                 {response.hint && (
-                    <p className="text-sm opacity-70 border-t border-red-500/20 pt-2 mt-2">
-                        💡 {response.hint}
-                    </p>
+                    <div className="flex gap-3 bg-red-500/5 p-4 rounded-lg border border-red-500/10">
+                        <span className="text-xl">💡</span>
+                        <div className="text-sm text-slate-300">
+                            <span className="font-bold text-slate-200 block mb-1">Suggestion</span>
+                            {response.hint}
+                        </div>
+                    </div>
+                )}
+
+                {/* Retry Button if it looks like a connection error */}
+                {(response.status === 0 || !response.status) && (
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="mt-2 text-sm bg-red-500/10 hover:bg-red-500/20 text-red-300 px-4 py-2 rounded-lg transition-colors border border-red-500/20"
+                    >
+                        Reload Page to Retry Connection
+                    </button>
                 )}
             </div>
         );

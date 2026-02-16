@@ -101,32 +101,34 @@ function RequestPage() {
     };
 
     return (
-        <div className="h-full flex flex-col gap-8">
+        <div className="h-full flex flex-col gap-12">
             <div>
                 <h1 className="text-2xl font-bold">API Tester</h1>
-                <div className="flex items-center gap-3 mt-2 text-sm text-slate-400">
+                <div className="flex items-center gap-3 mt-3 text-sm text-slate-400">
                     <FiInfo className="shrink-0" />
                     <span>Enter any public API URL and click Send.</span>
+                </div>
+                <div className="mt-4">
                     <button
                         onClick={() => {
                             setMethod('GET');
                             setUrl('https://jsonplaceholder.typicode.com/posts');
                             toast.info('Example loaded — click Send!');
                         }}
-                        className="inline-flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-colors text-sm border border-blue-500/20"
                     >
                         <FiZap className="text-xs" />
-                        Try Example
+                        Try Example Request
                     </button>
                 </div>
             </div>
 
             {/* Request URL Bar */}
-            <div className="flex gap-2">
+            <div className="flex gap-4">
                 <select
                     value={method}
                     onChange={(e) => setMethod(e.target.value)}
-                    className={`px-4 py-2 rounded-lg font-medium border-0 cursor-pointer ${METHOD_COLORS[method]}`}
+                    className={`px-6 py-3 rounded-xl font-bold border-0 cursor-pointer transition-transform hover:scale-105 active:scale-95 ${METHOD_COLORS[method]}`}
                 >
                     {HTTP_METHODS.map((m) => (
                         <option key={m} value={m}>{m}</option>
@@ -169,16 +171,16 @@ function RequestPage() {
 
             <div className="flex-1 grid lg:grid-cols-2 gap-6 min-h-0">
                 {/* Request Configuration */}
-                <div className="card flex flex-col min-h-0">
+                <div className="card flex flex-col min-h-0 border border-slate-700/50 shadow-lg">
                     {/* Tabs */}
-                    <div className="flex border-b border-slate-700 mb-4">
+                    <div className="flex border-b border-slate-700/50 mb-8 gap-4 p-4">
                         {['params', 'headers', 'body', 'auth'].map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
-                                className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === tab
-                                    ? 'border-blue-500 text-blue-400'
-                                    : 'border-transparent text-slate-400 hover:text-white'
+                                className={`px-6 py-2.5 text-sm font-semibold rounded-lg transition-all ${activeTab === tab
+                                    ? 'bg-slate-700/50 text-white shadow-sm ring-1 ring-slate-600'
+                                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
                                     }`}
                             >
                                 {tab.charAt(0).toUpperCase() + tab.slice(1)}

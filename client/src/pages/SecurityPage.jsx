@@ -84,38 +84,46 @@ function SecurityPage() {
 
             {/* Scan Form */}
             <div className="card">
-                <div className="flex gap-4 mb-3">
-                    <input
-                        type="text"
-                        value={url}
-                        onChange={(e) => setUrl(e.target.value)}
-                        placeholder="Enter URL to scan (e.g., https://example.com)"
-                        className="input-field flex-1"
-                        onKeyDown={(e) => e.key === 'Enter' && handleScan()}
-                    />
+                <div className="flex flex-col gap-6">
+                    <div className="flex flex-col md:flex-row gap-4">
+                        <div className="flex-1 relative group">
+                            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
+                            <input
+                                type="text"
+                                value={url}
+                                onChange={(e) => setUrl(e.target.value)}
+                                placeholder="Enter URL to scan (e.g., https://example.com)"
+                                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-4 pl-12 pr-4 text-lg focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-sm"
+                                onKeyDown={(e) => e.key === 'Enter' && handleScan()}
+                            />
+                        </div>
 
-                    <select
-                        value={scanType}
-                        onChange={(e) => setScanType(e.target.value)}
-                        className="input-field w-48"
-                    >
-                        <option value="full">Full Scan</option>
-                        <option value="headers">Headers Only</option>
-                        <option value="ssl">SSL Only</option>
-                        <option value="vulnerabilities">Vulnerabilities</option>
-                    </select>
+                        <div className="relative min-w-[200px]">
+                            <select
+                                value={scanType}
+                                onChange={(e) => setScanType(e.target.value)}
+                                className="w-full h-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-2 appearance-none cursor-pointer hover:border-slate-600 focus:outline-none focus:border-blue-500/50 transition-colors"
+                            >
+                                <option value="full">Full Scan</option>
+                                <option value="headers">Headers Only</option>
+                                <option value="ssl">SSL Only</option>
+                                <option value="vulnerabilities">Vulnerabilities</option>
+                            </select>
+                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500 text-xs">▼</div>
+                        </div>
+                    </div>
 
                     <button
                         onClick={handleScan}
                         disabled={loading}
-                        className="btn-primary flex items-center gap-2 px-6"
+                        className="w-full md:w-auto self-end btn-primary px-8 py-3 flex items-center justify-center gap-2 text-lg font-medium shadow-lg shadow-blue-500/20"
                     >
                         {loading ? (
-                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                         ) : (
                             <>
-                                <FiSearch />
-                                Scan
+                                <FiShield className="text-xl" />
+                                Start Security Scan
                             </>
                         )}
                     </button>
