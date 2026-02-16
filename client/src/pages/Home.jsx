@@ -57,7 +57,7 @@ function Home() {
             {/* Hero Section */}
             <section className="relative py-20 px-4 overflow-hidden">
                 <div className="absolute inset-0 bg-blue-500/5 radial-gradient pointer-events-none" />
-                <div className="max-w-6xl mx-auto text-center relative z-10 animate-slide-up">
+                <div className="max-w-4xl mx-auto text-center relative z-10 animate-slide-up flex flex-col items-center">
                     <div className="inline-flex items-center px-4 py-2 rounded-full bg-slate-800/80 border border-slate-700 backdrop-blur-sm mb-8">
                         <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
                         <span className="text-sm text-slate-300">DevHub v1.0 • Now with OWASP 2025</span>
@@ -239,6 +239,9 @@ function Home() {
                     </div>
                 </div>
             </section>
+
+            {/* Spacer */}
+            <div className="h-24"></div>
 
             {/* CTA */}
             <section className="py-24 px-4">

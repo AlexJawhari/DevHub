@@ -93,7 +93,7 @@ function SecurityPage() {
                                 value={url}
                                 onChange={(e) => setUrl(e.target.value)}
                                 placeholder="Enter URL to scan (e.g., https://example.com)"
-                                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-4 pl-12 pr-4 text-lg focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-sm"
+                                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-4 pl-14 pr-4 text-lg focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-sm"
                                 onKeyDown={(e) => e.key === 'Enter' && handleScan()}
                             />
                         </div>

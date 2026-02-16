@@ -19,11 +19,20 @@ const { initMonitoringJobs } = require('./jobs/monitoringJobs');
 const app = express();
 const server = http.createServer(app);
 
+// Allowed origins
+const ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+    'https://devhub-steel.vercel.app',
+    'https://devhub-git-main-alexjawharis-projects.vercel.app',
+    process.env.FRONTEND_URL
+].filter(Boolean);
+
 // WebSocket setup for real-time updates
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-        methods: ['GET', 'POST']
+        origin: ALLOWED_ORIGINS,
+        methods: ['GET', 'POST'],
+        credentials: true
     }
 });
 
@@ -37,7 +46,16 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+
+        if (ALLOWED_ORIGINS.includes(origin) || origin.endsWith('.vercel.app')) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 
