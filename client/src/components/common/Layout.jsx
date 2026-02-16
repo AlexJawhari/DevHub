@@ -8,8 +8,10 @@ function Layout() {
             <Header />
             <div className="flex flex-1">
                 <Sidebar />
-                <main className="flex-1 p-6 lg:p-8 overflow-auto">
-                    <Outlet />
+                <main className="flex-1 p-6 lg:p-10 overflow-auto">
+                    <div className="max-w-7xl mx-auto w-full">
+                        <Outlet />
+                    </div>
                 </main>
             </div>
         </div>

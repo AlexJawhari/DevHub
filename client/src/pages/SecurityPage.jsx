@@ -77,8 +77,8 @@ function SecurityPage() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6">
-            <div className="flex items-center justify-between">
+        <div className="max-w-6xl mx-auto space-y-10">
+            <div className="text-center mb-12">
                 <h1 className="text-2xl font-bold">Security Scanner</h1>
             </div>
 
@@ -135,8 +135,8 @@ function SecurityPage() {
                             key={t.key}
                             onClick={() => setScanType(t.key)}
                             className={`p-3 rounded-lg border cursor-pointer transition-all text-center ${scanType === t.key
-                                    ? 'bg-purple-500/15 border-purple-500/50 text-purple-300'
-                                    : 'border-slate-700 hover:border-slate-600 text-slate-400'
+                                ? 'bg-purple-500/15 border-purple-500/50 text-purple-300'
+                                : 'border-slate-700 hover:border-slate-600 text-slate-400'
                                 }`}
                         >
                             <div className="text-sm font-medium">{t.label}</div>

@@ -101,7 +101,7 @@ function RequestPage() {
     };
 
     return (
-        <div className="h-full flex flex-col gap-5">
+        <div className="h-full flex flex-col gap-8">
             <div>
                 <h1 className="text-2xl font-bold">API Tester</h1>
                 <div className="flex items-center gap-3 mt-2 text-sm text-slate-400">
