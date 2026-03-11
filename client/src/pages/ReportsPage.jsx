@@ -71,14 +71,14 @@ function ReportsPage() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-8">
             <h1 className="text-2xl font-bold">Security Reports</h1>
 
             {scans.length === 0 ? (
                 <div className="card text-center py-12">
-                    <FiFileText className="text-4xl text-slate-500 mx-auto mb-4" />
+                    <FiFileText className="text-4xl text-slate-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium">No reports yet</h3>
-                    <p className="text-slate-400 mt-2">
+                    <p className="text-slate-300 mt-2">
                         Run a security scan to generate your first report.
                     </p>
                 </div>
@@ -93,7 +93,7 @@ function ReportsPage() {
 
                                 <div>
                                     <h3 className="font-medium truncate max-w-md">{scan.target_url}</h3>
-                                    <div className="flex items-center gap-4 mt-1 text-sm text-slate-400">
+                                    <div className="flex items-center gap-4 mt-1 text-sm text-slate-300">
                                         <span>{new Date(scan.started_at).toLocaleDateString()}</span>
                                         <span className="capitalize">{scan.scan_type} scan</span>
                                         <span className={`font-medium ${getScoreColor(scan.security_score)}`}>
@@ -128,3 +128,4 @@ function ReportsPage() {
 }
 
 export default ReportsPage;
+

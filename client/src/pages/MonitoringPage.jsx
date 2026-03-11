@@ -83,7 +83,7 @@ function MonitoringPage() {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold">API Monitoring</h1>
                 <button
@@ -102,9 +102,9 @@ function MonitoringPage() {
 
                     {endpoints.length === 0 ? (
                         <div className="text-center py-8">
-                            <FiActivity className="text-3xl text-slate-500 mx-auto mb-3" />
-                            <p className="text-slate-400 text-sm">No endpoints monitored yet.</p>
-                            <p className="text-slate-500 text-xs mt-1">Click &ldquo;Add Endpoint&rdquo; to start monitoring an API.</p>
+                            <FiActivity className="text-3xl text-slate-400 mx-auto mb-3" />
+                            <p className="text-slate-300 text-sm">No endpoints monitored yet.</p>
+                            <p className="text-slate-400 text-xs mt-1">Click &ldquo;Add Endpoint&rdquo; to start monitoring an API.</p>
                         </div>
                     ) : (
                         <div className="space-y-3">
@@ -122,7 +122,7 @@ function MonitoringPage() {
                                             {endpoint.is_active ? (
                                                 <FiCheck className="text-green-500" />
                                             ) : (
-                                                <FiX className="text-slate-500" />
+                                                <FiX className="text-slate-400" />
                                             )}
                                             <span className="font-medium truncate">{endpoint.name}</span>
                                         </div>
@@ -131,12 +131,12 @@ function MonitoringPage() {
                                                 e.stopPropagation();
                                                 handleDelete(endpoint.id);
                                             }}
-                                            className="p-1 text-slate-400 hover:text-red-400"
+                                            className="p-1 text-slate-300 hover:text-red-400"
                                         >
                                             <FiTrash2 size={14} />
                                         </button>
                                     </div>
-                                    <p className="text-xs text-slate-400 truncate mt-1">{endpoint.url}</p>
+                                    <p className="text-xs text-slate-300 truncate mt-1">{endpoint.url}</p>
                                 </div>
                             ))}
                         </div>
@@ -146,11 +146,11 @@ function MonitoringPage() {
                 {/* Stats Panel */}
                 <div className="card lg:col-span-2">
                     {selectedEndpoint && stats ? (
-                        <div className="space-y-6">
+                        <div className="space-y-8">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <h3 className="text-lg font-medium">{selectedEndpoint.name}</h3>
-                                    <p className="text-sm text-slate-400">{selectedEndpoint.url}</p>
+                                    <p className="text-sm text-slate-300">{selectedEndpoint.url}</p>
                                 </div>
                                 <button
                                     onClick={() => fetchStats(selectedEndpoint.id)}
@@ -170,8 +170,8 @@ function MonitoringPage() {
                                             }`}>
                                             {stats.stats[period]?.uptime || 0}%
                                         </div>
-                                        <div className="text-xs text-slate-400">Uptime ({period})</div>
-                                        <div className="text-xs text-slate-500 mt-1">
+                                        <div className="text-xs text-slate-300">Uptime ({period})</div>
+                                        <div className="text-xs text-slate-400 mt-1">
                                             {stats.stats[period]?.avgResponseTime || 0}ms avg
                                         </div>
                                     </div>
@@ -194,7 +194,7 @@ function MonitoringPage() {
                                         </LineChart>
                                     </ResponsiveContainer>
                                 ) : (
-                                    <div className="h-48 flex items-center justify-center text-slate-500">
+                                    <div className="h-48 flex items-center justify-center text-slate-400">
                                         <FiActivity className="text-4xl" />
                                         <span className="ml-2">No check data yet</span>
                                     </div>
@@ -202,7 +202,7 @@ function MonitoringPage() {
                             </div>
                         </div>
                     ) : (
-                        <div className="h-64 flex items-center justify-center text-slate-500">
+                        <div className="h-64 flex items-center justify-center text-slate-400">
                             <FiActivity className="text-4xl mr-3" />
                             <span>Select an endpoint to view stats</span>
                         </div>
@@ -333,3 +333,4 @@ function AddEndpointModal({ onClose, onAdd }) {
 }
 
 export default MonitoringPage;
+

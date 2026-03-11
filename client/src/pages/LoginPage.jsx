@@ -38,9 +38,9 @@ function LoginPage() {
         <div className="min-h-screen flex items-center justify-center p-4 relative">
             <Link
                 to="/"
-                className="absolute top-8 left-8 text-slate-400 hover:text-white flex items-center gap-2 transition-colors py-2 px-4 rounded-lg hover:bg-slate-800"
+                className="absolute top-8 left-8 text-slate-300 hover:text-white flex items-center gap-2 transition-colors py-2 px-4 rounded-lg hover:bg-slate-800"
             >
-                <span>←</span> Back to Home
+                <span>&larr;</span> Back to Home
             </Link>
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
@@ -53,7 +53,7 @@ function LoginPage() {
                         </span>
                     </Link>
                     <h1 className="text-2xl font-bold">Welcome back</h1>
-                    <p className="text-slate-400 mt-2">Sign in to your account</p>
+                    <p className="text-slate-300 mt-2">Sign in to your account</p>
                 </div>
 
                 <div className="card border-t-4 border-t-purple-500 shadow-xl shadow-purple-900/10">
@@ -63,7 +63,7 @@ function LoginPage() {
                                 Email
                             </label>
                             <div className="relative">
-                                <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" />
                                 <input
                                     type="email"
                                     value={formData.email}
@@ -80,13 +80,13 @@ function LoginPage() {
                                 Password
                             </label>
                             <div className="relative">
-                                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" />
                                 <input
                                     type="password"
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                     className="input-field pl-10"
-                                    placeholder="••••••••"
+                                    placeholder="********"
                                     required
                                 />
                             </div>
@@ -108,7 +108,7 @@ function LoginPage() {
                         </button>
                     </form>
 
-                    <div className="mt-6 text-center text-sm text-slate-400">
+                    <div className="mt-6 text-center text-sm text-slate-300">
                         Don't have an account?{' '}
                         <Link to="/register" className="text-blue-400 hover:text-blue-300">
                             Sign up
@@ -117,7 +117,7 @@ function LoginPage() {
                     <div className="mt-8 pt-6 border-t border-slate-700/50 text-center">
                         <button
                             onClick={() => setShowEducation(true)}
-                            className="text-xs text-slate-500 hover:text-slate-300 transition-colors flex items-center justify-center gap-1 mx-auto"
+                            className="text-xs text-slate-400 hover:text-slate-300 transition-colors flex items-center justify-center gap-1 mx-auto"
                         >
                             <FiShield className="text-xs" />
                             Why do I need an account?
@@ -136,3 +136,5 @@ function LoginPage() {
 }
 
 export default LoginPage;
+
+

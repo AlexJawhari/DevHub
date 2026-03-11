@@ -23,7 +23,7 @@ function SettingsPage() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-8">
             <h1 className="text-2xl font-bold">Settings</h1>
 
             <div className="card space-y-8">
@@ -143,3 +143,4 @@ function SettingsPage() {
 }
 
 export default SettingsPage;
+

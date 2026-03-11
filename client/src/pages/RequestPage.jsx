@@ -104,7 +104,7 @@ function RequestPage() {
         <div className="h-full flex flex-col gap-12">
             <div>
                 <h1 className="text-2xl font-bold">API Tester</h1>
-                <div className="flex items-center gap-3 mt-3 text-sm text-slate-400">
+                <div className="flex items-center gap-3 mt-3 text-sm text-slate-300">
                     <FiInfo className="shrink-0" />
                     <span>Enter any public API URL and click Send.</span>
                 </div>
@@ -113,7 +113,7 @@ function RequestPage() {
                         onClick={() => {
                             setMethod('GET');
                             setUrl('https://jsonplaceholder.typicode.com/posts');
-                            toast.info('Example loaded — click Send!');
+                            toast.info('Example loaded - click Send!');
                         }}
                         className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-colors text-sm border border-blue-500/20"
                     >
@@ -185,7 +185,7 @@ function RequestPage() {
                                     onClick={() => setActiveTab(tab)}
                                     className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${activeTab === tab
                                         ? 'bg-slate-700 text-white shadow-sm ring-1 ring-slate-600'
-                                        : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                                        : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
                                         }`}
                                 >
                                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -222,7 +222,7 @@ function RequestPage() {
                                         />
                                         <button
                                             onClick={() => removeQueryParam(index)}
-                                            className="p-2 text-slate-400 hover:text-red-400"
+                                            className="p-2 text-slate-300 hover:text-red-400"
                                         >
                                             <FiTrash2 />
                                         </button>
@@ -230,7 +230,7 @@ function RequestPage() {
                                 ))}
                                 <button
                                     onClick={addQueryParam}
-                                    className="flex items-center gap-2 text-sm text-slate-400 hover:text-blue-400"
+                                    className="flex items-center gap-2 text-sm text-slate-300 hover:text-blue-400"
                                 >
                                     <FiPlus /> Add Parameter
                                 </button>
@@ -265,7 +265,7 @@ function RequestPage() {
                                         />
                                         <button
                                             onClick={() => removeHeader(index)}
-                                            className="p-2 text-slate-400 hover:text-red-400"
+                                            className="p-2 text-slate-300 hover:text-red-400"
                                         >
                                             <FiTrash2 />
                                         </button>
@@ -273,7 +273,7 @@ function RequestPage() {
                                 ))}
                                 <button
                                     onClick={addHeader}
-                                    className="flex items-center gap-2 text-sm text-slate-400 hover:text-blue-400"
+                                    className="flex items-center gap-2 text-sm text-slate-300 hover:text-blue-400"
                                 >
                                     <FiPlus /> Add Header
                                 </button>
@@ -292,7 +292,7 @@ function RequestPage() {
                         {/* Body Tab */}
                         {activeTab === 'body' && (
                             <div className="h-full flex flex-col">
-                                <div className="text-xs text-slate-400 mb-2">
+                                <div className="text-xs text-slate-300 mb-2">
                                     {['POST', 'PUT', 'PATCH'].includes(method)
                                         ? 'Request body (JSON)'
                                         : 'Body is only sent with POST, PUT, and PATCH requests'}
@@ -301,7 +301,7 @@ function RequestPage() {
                                     value={body}
                                     onChange={(e) => setBody(e.target.value)}
                                     placeholder='{"key": "value"}'
-                                    className="input-field flex-1 font-mono text-sm resize-none"
+                                    className="input-field flex-1 font-mono text-sm leading-relaxed resize-none"
                                     disabled={!['POST', 'PUT', 'PATCH'].includes(method)}
                                 />
                             </div>
@@ -379,11 +379,11 @@ function RequestPage() {
                         Response
                         {response && !response.error && (
                             <div className="flex items-center gap-4 ml-auto text-sm">
-                                <span className="flex items-center gap-1 text-slate-400">
+                                <span className="flex items-center gap-1 text-slate-300">
                                     <FiClock className="text-xs" />
                                     {response.responseTime}ms
                                 </span>
-                                <span className="flex items-center gap-1 text-slate-400">
+                                <span className="flex items-center gap-1 text-slate-300">
                                     <FiDatabase className="text-xs" />
                                     {(response.size / 1024).toFixed(2)} KB
                                 </span>
@@ -405,13 +405,13 @@ function RequestPage() {
                         <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 w-full max-w-sm animate-slide-up">
                             <div className="flex justify-between items-center mb-4">
                                 <h3 className="text-lg font-bold">Save Request</h3>
-                                <button onClick={() => setShowSaveModal(false)} className="text-slate-400 hover:text-white">
+                                <button onClick={() => setShowSaveModal(false)} className="text-slate-300 hover:text-white">
                                     <FiX />
                                 </button>
                             </div>
                             <div className="space-y-4">
                                 <div>
-                                    <label className="text-sm text-slate-400 mb-1 block">Request Name</label>
+                                    <label className="text-sm text-slate-300 mb-1 block">Request Name</label>
                                     <input
                                         type="text"
                                         value={requestName}
@@ -445,3 +445,5 @@ function RequestPage() {
 }
 
 export default RequestPage;
+
+

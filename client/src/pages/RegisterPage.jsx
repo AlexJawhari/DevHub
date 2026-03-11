@@ -63,9 +63,9 @@ function RegisterPage() {
         <div className="min-h-screen flex items-center justify-center p-4 relative">
             <Link
                 to="/"
-                className="absolute top-8 left-8 text-slate-400 hover:text-white flex items-center gap-2 transition-colors py-2 px-4 rounded-lg hover:bg-slate-800"
+                className="absolute top-8 left-8 text-slate-300 hover:text-white flex items-center gap-2 transition-colors py-2 px-4 rounded-lg hover:bg-slate-800"
             >
-                <span>←</span> Back to Home
+                <span>&larr;</span> Back to Home
             </Link>
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
@@ -78,7 +78,7 @@ function RegisterPage() {
                         </span>
                     </Link>
                     <h1 className="text-2xl font-bold">Create your account</h1>
-                    <p className="text-slate-400 mt-2">Start securing your APIs today</p>
+                    <p className="text-slate-300 mt-2">Start securing your APIs today</p>
                 </div>
 
                 <div className="card border-t-4 border-t-blue-500 shadow-xl shadow-blue-900/10">
@@ -88,7 +88,7 @@ function RegisterPage() {
                                 Username
                             </label>
                             <div className="relative">
-                                <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" />
                                 <input
                                     type="text"
                                     value={formData.username}
@@ -107,7 +107,7 @@ function RegisterPage() {
                                 Email
                             </label>
                             <div className="relative">
-                                <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" />
                                 <input
                                     type="email"
                                     value={formData.email}
@@ -124,13 +124,13 @@ function RegisterPage() {
                                 Password
                             </label>
                             <div className="relative">
-                                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" />
                                 <input
                                     type="password"
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                     className="input-field pl-10"
-                                    placeholder="••••••••"
+                                    placeholder="********"
                                     required
                                 />
                             </div>
@@ -159,9 +159,9 @@ function RegisterPage() {
                                             {passwordChecks[key] ? (
                                                 <FiCheck className="text-green-500" />
                                             ) : (
-                                                <FiX className="text-slate-500" />
+                                                <FiX className="text-slate-400" />
                                             )}
-                                            <span className={passwordChecks[key] ? 'text-green-500' : 'text-slate-500'}>
+                                            <span className={passwordChecks[key] ? 'text-green-500' : 'text-slate-400'}>
                                                 {label}
                                             </span>
                                         </div>
@@ -175,13 +175,13 @@ function RegisterPage() {
                                 Confirm Password
                             </label>
                             <div className="relative">
-                                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" />
                                 <input
                                     type="password"
                                     value={formData.confirmPassword}
                                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                                     className="input-field pl-10"
-                                    placeholder="••••••••"
+                                    placeholder="********"
                                     required
                                 />
                             </div>
@@ -203,7 +203,7 @@ function RegisterPage() {
                         </button>
                     </form>
 
-                    <div className="mt-6 text-center text-sm text-slate-400">
+                    <div className="mt-6 text-center text-sm text-slate-300">
                         Already have an account?{' '}
                         <Link to="/login" className="text-blue-400 hover:text-blue-300">
                             Sign in
@@ -216,3 +216,5 @@ function RegisterPage() {
 }
 
 export default RegisterPage;
+
+

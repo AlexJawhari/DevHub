@@ -22,6 +22,7 @@ body {
   background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
   color: #f8fafc;
   min-height: 100vh;
+  line-height: 1.5;
 }
 
 /* Custom scrollbar */
@@ -122,7 +123,7 @@ body {
 
 /* Method select base */
 .method-select {
-  @apply min-h-[44px] px-4 py-2.5 rounded-xl font-semibold border border-slate-700/60 bg-transparent;
+  @apply min-h-[44px] px-4 py-2.5 rounded-xl font-semibold border border-slate-700/60 bg-transparent text-left;
 }
 
 /* HTTP method colors */
@@ -170,7 +171,7 @@ body {
 
 /* Input styles */
 .input-field {
-  @apply w-full px-4 py-2.5 min-h-[44px] bg-slate-800 border border-slate-600 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all;
+  @apply w-full px-4 py-2.5 min-h-[44px] bg-slate-800 border border-slate-600 rounded-lg text-slate-100 text-left placeholder:text-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all;
 }
 
 /* Card styles */
@@ -206,6 +207,7 @@ body {
 .animate-slide-up {
   animation: slide-up 0.3s ease-out;
 }
+
 
 
 

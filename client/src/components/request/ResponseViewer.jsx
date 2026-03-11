@@ -1,4 +1,4 @@
-import { FiAlertCircle } from 'react-icons/fi';
+import { FiAlertCircle, FiInfo } from 'react-icons/fi';
 
 function ResponseViewer({ response, loading }) {
     if (loading) {
@@ -6,7 +6,7 @@ function ResponseViewer({ response, loading }) {
             <div className="h-full flex items-center justify-center">
                 <div className="text-center">
                     <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                    <p className="text-slate-400">Sending request...</p>
+                    <p className="text-slate-300">Sending request...</p>
                 </div>
             </div>
         );
@@ -14,7 +14,7 @@ function ResponseViewer({ response, loading }) {
 
     if (!response) {
         return (
-            <div className="h-full flex items-center justify-center text-slate-500">
+            <div className="h-full flex items-center justify-center text-slate-400">
                 <p>Send a request to see the response</p>
             </div>
         );
@@ -32,7 +32,7 @@ function ResponseViewer({ response, loading }) {
 
                 {response.hint && (
                     <div className="flex gap-3 bg-red-500/5 p-4 rounded-lg border border-red-500/10">
-                        <span className="text-xl">💡</span>
+                        <FiInfo className="text-xl text-red-300 mt-0.5 shrink-0" />
                         <div className="text-sm text-slate-300">
                             <span className="font-bold text-slate-200 block mb-1">Suggestion</span>
                             {response.hint}
@@ -82,7 +82,7 @@ function ResponseViewer({ response, loading }) {
 
             {/* Headers Toggle */}
             <details className="group">
-                <summary className="cursor-pointer text-sm text-slate-400 hover:text-white">
+                <summary className="cursor-pointer text-sm text-slate-300 hover:text-white">
                     Response Headers ({Object.keys(response.headers || {}).length})
                 </summary>
                 <div className="mt-2 p-3 bg-slate-900 rounded-lg text-xs font-mono overflow-x-auto">
@@ -97,7 +97,7 @@ function ResponseViewer({ response, loading }) {
 
             {/* Body */}
             <div className="bg-slate-900 rounded-lg overflow-auto max-h-96">
-                <pre className="p-4 text-sm font-mono text-slate-300 whitespace-pre-wrap">
+                <pre className="p-4 text-sm font-mono text-slate-300 whitespace-pre-wrap leading-relaxed">
                     {formatJSON(response.data)}
                 </pre>
             </div>
@@ -106,3 +106,4 @@ function ResponseViewer({ response, loading }) {
 }
 
 export default ResponseViewer;
+

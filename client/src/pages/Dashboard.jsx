@@ -53,11 +53,11 @@ function Dashboard() {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold">Dashboard</h1>
-                    <p className="text-slate-400">Welcome back, {user?.username}</p>
+                    <p className="text-slate-300">Welcome back, {user?.username}</p>
                 </div>
             </div>
 
@@ -70,7 +70,7 @@ function Dashboard() {
                         </div>
                         <div>
                             <div className="text-2xl font-bold">{collections.length}</div>
-                            <div className="text-sm text-slate-400">Collections</div>
+                            <div className="text-sm text-slate-300">Collections</div>
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,7 @@ function Dashboard() {
                         </div>
                         <div>
                             <div className="text-2xl font-bold">{savedRequests.length}</div>
-                            <div className="text-sm text-slate-400">Saved Requests</div>
+                            <div className="text-sm text-slate-300">Saved Requests</div>
                         </div>
                     </div>
                 </div>
@@ -94,7 +94,7 @@ function Dashboard() {
                         </div>
                         <div>
                             <div className="text-2xl font-bold">{history.length}</div>
-                            <div className="text-sm text-slate-400">History Items</div>
+                            <div className="text-sm text-slate-300">History Items</div>
                         </div>
                     </div>
                 </div>
@@ -102,10 +102,10 @@ function Dashboard() {
                 <div className="card cursor-pointer hover:border-blue-500/50 transition-colors">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-slate-500/20 rounded-lg flex items-center justify-center">
-                            <FiPlus className="text-slate-400" />
+                            <FiPlus className="text-slate-300" />
                         </div>
                         <div>
-                            <div className="text-sm text-slate-400">New Collection</div>
+                            <div className="text-sm text-slate-300">New Collection</div>
                         </div>
                     </div>
                 </div>
@@ -119,7 +119,7 @@ function Dashboard() {
                         onClick={() => setActiveTab(tab)}
                         className={`px-4 py-2 font-medium border-b-2 transition-colors ${activeTab === tab
                                 ? 'border-blue-500 text-blue-400'
-                                : 'border-transparent text-slate-400 hover:text-white'
+                                : 'border-transparent text-slate-300 hover:text-white'
                             }`}
                     >
                         {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -131,7 +131,7 @@ function Dashboard() {
             <div className="card">
                 {activeTab === 'collections' && (
                     collections.length === 0 ? (
-                        <p className="text-center text-slate-400 py-8">No collections yet. Create one to organize your requests.</p>
+                        <p className="text-center text-slate-300 py-8">No collections yet. Create one to organize your requests.</p>
                     ) : (
                         <div className="space-y-2">
                             {collections.map((collection) => (
@@ -148,7 +148,7 @@ function Dashboard() {
 
                 {activeTab === 'requests' && (
                     savedRequests.length === 0 ? (
-                        <p className="text-center text-slate-400 py-8">No saved requests yet.</p>
+                        <p className="text-center text-slate-300 py-8">No saved requests yet.</p>
                     ) : (
                         <div className="space-y-2">
                             {savedRequests.map((request) => (
@@ -158,11 +158,11 @@ function Dashboard() {
                                             {request.method}
                                         </span>
                                         <span>{request.name}</span>
-                                        <span className="text-slate-500 text-sm truncate max-w-xs">{request.url}</span>
+                                        <span className="text-slate-400 text-sm truncate max-w-xs">{request.url}</span>
                                     </div>
                                     <button
                                         onClick={() => handleDeleteRequest(request.id)}
-                                        className="p-2 text-slate-400 hover:text-red-400"
+                                        className="p-2 text-slate-300 hover:text-red-400"
                                     >
                                         <FiTrash2 />
                                     </button>
@@ -174,7 +174,7 @@ function Dashboard() {
 
                 {activeTab === 'history' && (
                     history.length === 0 ? (
-                        <p className="text-center text-slate-400 py-8">No request history yet.</p>
+                        <p className="text-center text-slate-300 py-8">No request history yet.</p>
                     ) : (
                         <div className="space-y-2">
                             {history.slice(0, 20).map((item) => (
@@ -185,7 +185,7 @@ function Dashboard() {
                                         </span>
                                         <span className="truncate max-w-md">{item.url}</span>
                                     </div>
-                                    <div className="flex items-center gap-4 text-sm text-slate-400">
+                                    <div className="flex items-center gap-4 text-sm text-slate-300">
                                         <span className={item.status_code < 400 ? 'text-green-500' : 'text-red-500'}>
                                             {item.status_code}
                                         </span>
@@ -203,3 +203,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
+

@@ -25,32 +25,32 @@ function Sidebar() {
     const visibleItems = navItems.filter(item => item.public || token);
 
     return (
-        <aside className="w-16 lg:w-56 glass border-r border-slate-700 flex flex-col py-6 shrink-0">
-            <nav className="flex-1 space-y-1.5 px-2">
+        <aside className="w-20 lg:w-64 glass border-r border-slate-700 flex flex-col py-8 shrink-0">
+            <nav className="flex-1 space-y-2.5 px-3 pt-2">
                 {visibleItems.map((item) => (
                     <NavLink
                         key={item.path}
                         to={item.path}
                         className={({ isActive }) =>
-                            `flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all ${isActive
-                                ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border-l-2 border-blue-500'
-                                : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
+                            `flex items-center lg:justify-start justify-center gap-3 px-3 py-3 rounded-xl text-[15px] font-medium transition-all ${isActive
+                                ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border-l-2 border-blue-500 shadow-sm'
+                                : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
                             }`
                         }
                     >
-                        <item.icon className="text-xl shrink-0" />
-                        <span className="hidden lg:block text-sm">{item.label}</span>
+                        <item.icon className="text-2xl shrink-0" />
+                        <span className="hidden lg:block">{item.label}</span>
                     </NavLink>
                 ))}
             </nav>
 
             {token && (
-                <div className="px-2 mt-auto">
+                <div className="px-3 mt-auto pt-4 border-t border-slate-700/60">
                     <NavLink
                         to="/settings"
-                        className="flex items-center space-x-3 px-3 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50 transition-all"
+                        className="flex items-center lg:justify-start justify-center gap-3 px-3 py-3 rounded-xl text-[15px] font-medium text-slate-300 hover:text-white hover:bg-slate-700/60 transition-all"
                     >
-                        <FiSettings className="text-xl shrink-0" />
+                        <FiSettings className="text-2xl shrink-0" />
                         <span className="hidden lg:block">Settings</span>
                     </NavLink>
                 </div>

@@ -77,7 +77,7 @@ function SecurityPage() {
     };
 
     return (
-        <div className="max-w-6xl mx-auto space-y-10">
+        <div className="max-w-6xl mx-auto space-y-12">
             <div className="text-center mb-12">
                 <h1 className="text-2xl font-bold">Security Scanner</h1>
             </div>
@@ -87,7 +87,7 @@ function SecurityPage() {
                 <div className="flex flex-col gap-6">
                     <div className="flex flex-col md:flex-row gap-4">
                         <div className="flex-1 relative group">
-                            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
+                            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-400 transition-colors" />
                             <input
                                 type="text"
                                 value={url}
@@ -109,7 +109,7 @@ function SecurityPage() {
                                 <option value="ssl">SSL Only</option>
                                 <option value="vulnerabilities">Vulnerabilities</option>
                             </select>
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500 text-xs">▼</div>
+                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-xs">v</div>
                         </div>
                     </div>
 
@@ -129,7 +129,7 @@ function SecurityPage() {
                     </button>
                 </div>
 
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-300">
                     Scans for OWASP Top 10 (2025) vulnerabilities, security headers, SSL/TLS configuration, and more.
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
@@ -144,7 +144,7 @@ function SecurityPage() {
                             onClick={() => setScanType(t.key)}
                             className={`p-3 rounded-lg border cursor-pointer transition-all text-center ${scanType === t.key
                                 ? 'bg-purple-500/15 border-purple-500/50 text-purple-300'
-                                : 'border-slate-700 hover:border-slate-600 text-slate-400'
+                                : 'border-slate-700 hover:border-slate-600 text-slate-300'
                                 }`}
                         >
                             <div className="text-sm font-medium">{t.label}</div>
@@ -159,7 +159,7 @@ function SecurityPage() {
                 <div className="card text-center py-12">
                     <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                     <h3 className="text-lg font-medium">Scanning...</h3>
-                    <p className="text-slate-400 mt-2">Analyzing security headers, SSL, and vulnerabilities</p>
+                    <p className="text-slate-300 mt-2">Analyzing security headers, SSL, and vulnerabilities</p>
                 </div>
             )}
 
@@ -171,7 +171,7 @@ function SecurityPage() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <h2 className="text-lg font-medium text-slate-300">Security Score</h2>
-                                <p className="text-sm text-slate-400 mt-1">{results.url}</p>
+                                <p className="text-sm text-slate-300 mt-1">{results.url}</p>
                             </div>
 
                             <div className="text-right">
@@ -194,11 +194,11 @@ function SecurityPage() {
                                 info: 'Info'
                             }).map(([key, label]) => (
                                 <div key={key} className="text-center">
-                                    <div className={`text-2xl font-bold ${results.summary[key] > 0 ? SEVERITY_STYLES[key].replace('severity-', 'text-').replace('-', '-') : 'text-slate-500'
+                                    <div className={`text-2xl font-bold ${results.summary[key] > 0 ? SEVERITY_STYLES[key].replace('severity-', 'text-').replace('-', '-') : 'text-slate-400'
                                         }`}>
                                         {results.summary[key] || 0}
                                     </div>
-                                    <div className="text-xs text-slate-400">{label}</div>
+                                    <div className="text-xs text-slate-300">{label}</div>
                                 </div>
                             ))}
                         </div>
@@ -256,7 +256,7 @@ function SecurityPage() {
                         <div className="card text-center py-8">
                             <FiCheck className="text-4xl text-green-500 mx-auto mb-4" />
                             <h3 className="text-lg font-medium">No Issues Found</h3>
-                            <p className="text-slate-400 mt-2">Great job! No security issues were detected.</p>
+                            <p className="text-slate-300 mt-2">Great job! No security issues were detected.</p>
                         </div>
                     )}
 
@@ -272,7 +272,7 @@ function SecurityPage() {
                                         </span>
                                         <div>
                                             <p className="font-medium">{rec.title}</p>
-                                            <p className="text-sm text-slate-400">{rec.action}</p>
+                                            <p className="text-sm text-slate-300">{rec.action}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -286,3 +286,4 @@ function SecurityPage() {
 }
 
 export default SecurityPage;
+

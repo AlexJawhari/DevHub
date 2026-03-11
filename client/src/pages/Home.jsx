@@ -60,12 +60,12 @@ function Home() {
                 <div className="max-w-7xl mx-auto text-center relative z-10 animate-slide-up">
                     <div className="inline-flex items-center px-4 py-2 rounded-full bg-slate-800/80 border border-slate-700 backdrop-blur-sm mb-8">
                         <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
-                        <span className="text-sm text-slate-300">DevHub v1.0 • Now with OWASP 2025</span>
+                        <span className="text-sm text-slate-300">DevHub v1.0 - Now with OWASP 2025</span>
                     </div>
 
                     <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
                         <span className="bg-gradient-to-r from-white via-blue-100 to-slate-300 bg-clip-text text-transparent">
-                            Master Your API's
+                            Master Your APIs
                         </span>
                         <br />
                         <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
@@ -73,7 +73,7 @@ function Home() {
                         </span>
                     </h1>
 
-                    <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                    <p className="text-xl text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed">
                         The all-in-one developer platform for testing endpoints, detecting vulnerabilities,
                         and monitoring uptime. No complex setup required.
                     </p>
@@ -151,7 +151,7 @@ function Home() {
                                     <item.icon />
                                 </div>
                                 <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                                <p className="text-slate-400 mb-4 h-12">{item.desc}</p>
+                                <p className="text-slate-300 mb-4 h-12">{item.desc}</p>
                                 <span className={`inline-flex items-center gap-1 text-sm font-medium ${item.tone.cta} group-hover:underline`}>
                                     {item.cta} <FiArrowRight />
                                 </span>
@@ -167,7 +167,7 @@ function Home() {
                     <div className="flex flex-col md:flex-row items-center justify-between gap-12">
                         <div className="flex-1 space-y-6">
                             <h2 className="text-3xl font-bold">Why Security Matters</h2>
-                            <p className="text-slate-400 text-lg leading-relaxed">
+                            <p className="text-slate-300 text-lg leading-relaxed">
                                 Modern applications rely heavily on APIs. A single vulnerability can expose database credentials,
                                 user data, or sensitive business logic. DevHub helps you stay ahead of threats.
                             </p>
@@ -182,7 +182,7 @@ function Home() {
                                     </div>
                                     <div>
                                         <h4 className="font-semibold">What is an API?</h4>
-                                        <p className="text-sm text-slate-400">Learn the basics of Application Programming Interfaces.</p>
+                                        <p className="text-sm text-slate-300">Learn the basics of Application Programming Interfaces.</p>
                                     </div>
                                     <FiArrowRight className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </button>
@@ -196,7 +196,7 @@ function Home() {
                                     </div>
                                     <div>
                                         <h4 className="font-semibold">OWASP Top 10</h4>
-                                        <p className="text-sm text-slate-400">Understand the most critical security risks in 2025.</p>
+                                        <p className="text-sm text-slate-300">Understand the most critical security risks in 2025.</p>
                                     </div>
                                     <FiArrowRight className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </button>
@@ -211,13 +211,13 @@ function Home() {
                                         <FiActivity className="text-green-400" />
                                         Platform Stats
                                     </h3>
-                                    <span className="text-xs text-slate-500 px-2 py-1 rounded bg-slate-800">Live</span>
+                                    <span className="text-xs text-slate-400 px-2 py-1 rounded bg-slate-800">Live</span>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     {stats.map((stat, index) => (
                                         <div key={index} className="p-4 rounded-lg bg-slate-800/50 text-center">
                                             <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
-                                            <div className="text-xs text-slate-400">{stat.label}</div>
+                                            <div className="text-xs text-slate-300">{stat.label}</div>
                                         </div>
                                     ))}
                                 </div>
@@ -233,7 +233,7 @@ function Home() {
                     <h2 className="text-3xl font-bold text-center mb-4">
                         Everything You Need
                     </h2>
-                    <p className="text-slate-400 text-center max-w-2xl mx-auto mb-16">
+                    <p className="text-slate-300 text-center max-w-2xl mx-auto mb-16">
                         A complete suite of tools designed for the modern developer workflow.
                     </p>
 
@@ -248,7 +248,7 @@ function Home() {
                                 </div>
 
                                 <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                                <p className="text-slate-400 leading-relaxed text-sm">{feature.description}</p>
+                                <p className="text-slate-300 leading-relaxed text-sm">{feature.description}</p>
                             </div>
                         ))}
                     </div>
@@ -281,3 +281,4 @@ function Home() {
 }
 
 export default Home;
+
