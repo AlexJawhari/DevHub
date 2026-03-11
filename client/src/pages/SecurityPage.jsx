@@ -93,7 +93,7 @@ function SecurityPage() {
                                 value={url}
                                 onChange={(e) => setUrl(e.target.value)}
                                 placeholder="Enter URL to scan (e.g., https://example.com)"
-                                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-4 pl-14 pr-4 text-lg focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-sm"
+                                className="input-field text-base py-3.5 pl-12 pr-4 rounded-xl bg-slate-800/50 shadow-sm"
                                 onKeyDown={(e) => e.key === 'Enter' && handleScan()}
                             />
                         </div>
@@ -102,7 +102,7 @@ function SecurityPage() {
                             <select
                                 value={scanType}
                                 onChange={(e) => setScanType(e.target.value)}
-                                className="w-full h-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-2 appearance-none cursor-pointer hover:border-slate-600 focus:outline-none focus:border-blue-500/50 transition-colors"
+                                className="input-field py-3.5 rounded-xl bg-slate-800/50 appearance-none cursor-pointer hover:border-slate-600 transition-colors"
                             >
                                 <option value="full">Full Scan</option>
                                 <option value="headers">Headers Only</option>
@@ -185,7 +185,7 @@ function SecurityPage() {
                         </div>
 
                         {/* Summary */}
-                        <div className="grid grid-cols-5 gap-4 mt-6">
+                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mt-6">
                             {Object.entries({
                                 critical: 'Critical',
                                 high: 'High',

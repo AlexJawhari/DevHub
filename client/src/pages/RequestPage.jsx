@@ -124,71 +124,77 @@ function RequestPage() {
             </div>
 
             {/* Request URL Bar */}
-            <div className="flex gap-4">
-                <select
-                    value={method}
-                    onChange={(e) => setMethod(e.target.value)}
-                    className={`px-6 py-3 rounded-xl font-bold border-0 cursor-pointer transition-transform hover:scale-105 active:scale-95 ${METHOD_COLORS[method]}`}
-                >
-                    {HTTP_METHODS.map((m) => (
-                        <option key={m} value={m}>{m}</option>
-                    ))}
-                </select>
+            <div className="flex flex-col lg:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-3 flex-1">
+                    <select
+                        value={method}
+                        onChange={(e) => setMethod(e.target.value)}
+                        className={`method-select ${METHOD_COLORS[method]} w-full sm:w-36 cursor-pointer transition-transform hover:scale-105 active:scale-95`}
+                    >
+                        {HTTP_METHODS.map((m) => (
+                            <option key={m} value={m}>{m}</option>
+                        ))}
+                    </select>
 
-                <input
-                    type="text"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    placeholder="https://api.example.com/users"
-                    className="input-field flex-1"
-                    onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                />
+                    <input
+                        type="text"
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                        placeholder="https://api.example.com/users"
+                        className="input-field flex-1"
+                        onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                    />
+                </div>
 
-                <button
-                    onClick={() => setShowSaveModal(true)}
-                    className="btn-secondary flex items-center gap-2 px-6"
-                    title="Save Request"
-                >
-                    <FiSave />
-                    <span className="hidden sm:inline">Save</span>
-                </button>
+                <div className="flex gap-3">
+                    <button
+                        onClick={() => setShowSaveModal(true)}
+                        className="btn-secondary flex items-center gap-2 px-5"
+                        title="Save Request"
+                    >
+                        <FiSave />
+                        <span className="hidden sm:inline">Save</span>
+                    </button>
 
-                <button
-                    onClick={handleSend}
-                    disabled={loading}
-                    className="btn-primary flex items-center gap-2 px-6"
-                >
-                    {loading ? (
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                        <>
-                            <FiSend />
-                            Send
-                        </>
-                    )}
-                </button>
+                    <button
+                        onClick={handleSend}
+                        disabled={loading}
+                        className="btn-primary flex items-center gap-2 px-6"
+                    >
+                        {loading ? (
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                            <>
+                                <FiSend />
+                                Send
+                            </>
+                        )}
+                    </button>
+                </div>
             </div>
 
             <div className="flex-1 grid lg:grid-cols-2 gap-6 min-h-0">
                 {/* Request Configuration */}
                 <div className="card flex flex-col min-h-0 border border-slate-700/50 shadow-lg">
                     {/* Tabs */}
-                    <div className="flex border-b border-slate-700/50 mb-8 gap-4 p-4">
-                        {['params', 'headers', 'body', 'auth'].map((tab) => (
-                            <button
-                                key={tab}
-                                onClick={() => setActiveTab(tab)}
-                                className={`px-6 py-2.5 text-sm font-semibold rounded-lg transition-all ${activeTab === tab
-                                    ? 'bg-slate-700/50 text-white shadow-sm ring-1 ring-slate-600'
-                                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                                    }`}
-                            >
-                                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                            </button>
-                        ))}
+                    <div className="px-4 pt-4">
+                        <div className="inline-flex flex-wrap gap-2 rounded-xl bg-slate-900/40 p-1.5 border border-slate-800/60">
+                            {['params', 'headers', 'body', 'auth'].map((tab) => (
+                                <button
+                                    key={tab}
+                                    onClick={() => setActiveTab(tab)}
+                                    className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${activeTab === tab
+                                        ? 'bg-slate-700 text-white shadow-sm ring-1 ring-slate-600'
+                                        : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                                        }`}
+                                >
+                                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                                </button>
+                            ))}
+                        </div>
                     </div>
 
-                    <div className="flex-1 overflow-auto">
+                    <div className="flex-1 overflow-auto px-4 pb-4">
                         {/* Query Params Tab */}
                         {activeTab === 'params' && (
                             <div className="space-y-2">

@@ -103,7 +103,12 @@ function Home() {
                                 desc: 'Send requests to any endpoint. Debug headers, auth, and payloads instantly.',
                                 link: '/request',
                                 cta: 'Open Tester',
-                                color: 'blue'
+                                tone: {
+                                    number: 'text-blue-500',
+                                    iconBg: 'bg-blue-500/20',
+                                    iconText: 'text-blue-400',
+                                    cta: 'text-blue-400'
+                                }
                             },
                             {
                                 step: '2',
@@ -112,7 +117,12 @@ function Home() {
                                 desc: 'Check for OWASP vulnerabilities and security misconfigurations.',
                                 link: '/security',
                                 cta: 'Start Scan',
-                                color: 'purple'
+                                tone: {
+                                    number: 'text-purple-500',
+                                    iconBg: 'bg-purple-500/20',
+                                    iconText: 'text-purple-400',
+                                    cta: 'text-purple-400'
+                                }
                             },
                             {
                                 step: '3',
@@ -121,7 +131,12 @@ function Home() {
                                 desc: 'Get notified immediately when your API goes down or becomes slow.',
                                 link: '/monitoring',
                                 cta: 'Set Up Monitor',
-                                color: 'green'
+                                tone: {
+                                    number: 'text-green-500',
+                                    iconBg: 'bg-green-500/20',
+                                    iconText: 'text-green-400',
+                                    cta: 'text-green-400'
+                                }
                             }
                         ].map((item) => (
                             <Link
@@ -129,15 +144,15 @@ function Home() {
                                 to={item.link}
                                 className="group relative p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50 hover:border-slate-600 hover:bg-slate-800 transition-all duration-300"
                             >
-                                <div className={`absolute top-0 right-0 p-4 opacity-10 text-9xl font-bold text-${item.color}-500 group-hover:scale-110 transition-transform select-none`}>
+                                <div className={`absolute top-0 right-0 p-4 opacity-10 text-9xl font-bold ${item.tone.number} group-hover:scale-110 transition-transform select-none`}>
                                     {item.step}
                                 </div>
-                                <div className={`w-12 h-12 rounded-xl bg-${item.color}-500/20 text-${item.color}-400 flex items-center justify-center text-2xl mb-4`}>
+                                <div className={`w-12 h-12 rounded-xl ${item.tone.iconBg} ${item.tone.iconText} flex items-center justify-center text-2xl mb-4`}>
                                     <item.icon />
                                 </div>
                                 <h3 className="text-xl font-bold mb-2">{item.title}</h3>
                                 <p className="text-slate-400 mb-4 h-12">{item.desc}</p>
-                                <span className={`inline-flex items-center gap-1 text-sm font-medium text-${item.color}-400 group-hover:underline`}>
+                                <span className={`inline-flex items-center gap-1 text-sm font-medium ${item.tone.cta} group-hover:underline`}>
                                     {item.cta} <FiArrowRight />
                                 </span>
                             </Link>

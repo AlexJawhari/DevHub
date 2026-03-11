@@ -70,6 +70,11 @@ body {
   mask-composite: exclude;
 }
 
+/* Radial background accent */
+.radial-gradient {
+  background: radial-gradient(600px circle at 20% 0%, rgba(59, 130, 246, 0.18), transparent 60%);
+}
+
 /* Status badges */
 .status-up {
   background: rgba(16, 185, 129, 0.2);
@@ -114,6 +119,11 @@ body {
   border-left: 3px solid #3b82f6;
 }
 
+/* Method select base */
+.method-select {
+  @apply min-h-11 px-4 py-2.5 rounded-xl font-semibold border border-slate-700/60 bg-transparent;
+}
+
 /* HTTP method colors */
 .method-get {
   background: rgba(16, 185, 129, 0.2);
@@ -142,25 +152,29 @@ body {
 
 /* Button styles */
 .btn-primary {
-  @apply px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg font-medium transition-all hover:opacity-90 hover:scale-105 active:scale-95;
+  @apply px-4 py-2.5 min-h-11 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg font-medium transition-all hover:opacity-90 hover:scale-105 active:scale-95;
 }
 
 .btn-secondary {
-  @apply px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg font-medium transition-all;
+  @apply px-4 py-2.5 min-h-11 bg-slate-700 hover:bg-slate-600 rounded-lg font-medium transition-all;
 }
 
 .btn-danger {
-  @apply px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg font-medium transition-all;
+  @apply px-4 py-2.5 min-h-11 bg-red-600 hover:bg-red-500 rounded-lg font-medium transition-all;
+}
+
+.btn-ghost {
+  @apply px-4 py-2.5 min-h-11 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all;
 }
 
 /* Input styles */
 .input-field {
-  @apply w-full px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all;
+  @apply w-full px-4 py-2.5 min-h-11 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all;
 }
 
 /* Card styles */
 .card {
-  @apply bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-5;
+  @apply bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6;
 }
 
 /* Animations */
@@ -191,3 +205,4 @@ body {
 .animate-slide-up {
   animation: slide-up 0.3s ease-out;
 }
+
