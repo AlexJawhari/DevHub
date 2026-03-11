@@ -103,9 +103,11 @@ server.listen(PORT, () => {
     console.log(`DevHub server running on port ${PORT}`);
 
     // Initialize monitoring cron jobs
-    initMonitoringJobs(io);\n    initSecurityScanJobs();
+    initMonitoringJobs(io);
+    initSecurityScanJobs();
 });
 
 module.exports = { app, io };
+
 
 
