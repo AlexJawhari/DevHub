@@ -71,7 +71,7 @@ function ReportsPage() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto space-y-8">
+        <div className="max-w-4xl mx-auto space-y-10">
             <h1 className="text-2xl font-bold">Security Reports</h1>
 
             {scans.length === 0 ? (
@@ -128,4 +128,5 @@ function ReportsPage() {
 }
 
 export default ReportsPage;
+
 

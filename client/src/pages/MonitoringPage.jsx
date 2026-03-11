@@ -83,7 +83,7 @@ function MonitoringPage() {
     }
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-10">
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold">API Monitoring</h1>
                 <button
@@ -146,7 +146,7 @@ function MonitoringPage() {
                 {/* Stats Panel */}
                 <div className="card lg:col-span-2">
                     {selectedEndpoint && stats ? (
-                        <div className="space-y-8">
+                        <div className="space-y-10">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <h3 className="text-lg font-medium">{selectedEndpoint.name}</h3>
@@ -333,4 +333,5 @@ function AddEndpointModal({ onClose, onAdd }) {
 }
 
 export default MonitoringPage;
+
 

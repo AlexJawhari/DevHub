@@ -25,8 +25,8 @@ function Sidebar() {
     const visibleItems = navItems.filter(item => item.public || token);
 
     return (
-        <aside className="w-20 lg:w-64 glass border-r border-slate-700 flex flex-col py-8 shrink-0">
-            <nav className="flex-1 space-y-2.5 px-3 pt-2">
+        <aside className="w-16 lg:w-52 glass border-r border-slate-700 flex flex-col py-8 shrink-0">
+            <nav className="flex-1 space-y-2.5 px-2.5 pt-4">
                 {visibleItems.map((item) => (
                     <NavLink
                         key={item.path}
@@ -45,7 +45,7 @@ function Sidebar() {
             </nav>
 
             {token && (
-                <div className="px-3 mt-auto pt-4 border-t border-slate-700/60">
+                <div className="px-2.5 mt-auto pt-4 border-t border-slate-700/60">
                     <NavLink
                         to="/settings"
                         className="flex items-center lg:justify-start justify-center gap-3 px-3 py-3 rounded-xl text-[15px] font-medium text-slate-300 hover:text-white hover:bg-slate-700/60 transition-all"
@@ -60,3 +60,4 @@ function Sidebar() {
 }
 
 export default Sidebar;
+

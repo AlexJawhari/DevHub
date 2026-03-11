@@ -53,7 +53,7 @@ function Dashboard() {
     }
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-10">
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold">Dashboard</h1>
@@ -203,4 +203,5 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
 

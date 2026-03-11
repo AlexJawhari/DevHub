@@ -173,17 +173,17 @@ function RequestPage() {
                 </div>
             </div>
 
-            <div className="flex-1 grid lg:grid-cols-2 gap-6 min-h-0">
+            <div className="flex-1 grid lg:grid-cols-2 gap-8 min-h-0">
                 {/* Request Configuration */}
                 <div className="card flex flex-col min-h-0 border border-slate-700/50 shadow-lg">
                     {/* Tabs */}
-                    <div className="px-4 pt-4">
-                        <div className="inline-flex flex-wrap gap-2 rounded-xl bg-slate-900/40 p-1.5 border border-slate-800/60">
+                    <div className="px-4 pt-4 pb-4 border-b border-slate-800/70">
+                        <div className="inline-flex flex-wrap gap-3 rounded-xl bg-slate-900/40 p-2 border border-slate-800/60">
                             {['params', 'headers', 'body', 'auth'].map((tab) => (
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
-                                    className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${activeTab === tab
+                                    className={`px-5 py-2.5 text-sm font-semibold rounded-lg transition-all ${activeTab === tab
                                         ? 'bg-slate-700 text-white shadow-sm ring-1 ring-slate-600'
                                         : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
                                         }`}
@@ -197,7 +197,7 @@ function RequestPage() {
                     <div className="flex-1 overflow-auto px-4 pb-4">
                         {/* Query Params Tab */}
                         {activeTab === 'params' && (
-                            <div className="space-y-2">
+                            <div className="space-y-3">
                                 {queryParams.map((param, index) => (
                                     <div key={index} className="flex gap-2 items-center">
                                         <input
@@ -239,7 +239,7 @@ function RequestPage() {
 
                         {/* Headers Tab */}
                         {activeTab === 'headers' && (
-                            <div className="space-y-2">
+                            <div className="space-y-3">
                                 {headers.map((header, index) => (
                                     <div key={index} className="flex gap-2 items-center">
                                         <input
@@ -332,7 +332,7 @@ function RequestPage() {
                                 )}
 
                                 {authType === 'basic' && (
-                                    <div className="space-y-2">
+                                    <div className="space-y-3">
                                         <input
                                             type="text"
                                             value={authConfig.username || ''}
@@ -351,7 +351,7 @@ function RequestPage() {
                                 )}
 
                                 {authType === 'apikey' && (
-                                    <div className="space-y-2">
+                                    <div className="space-y-3">
                                         <input
                                             type="text"
                                             value={authConfig.headerName || ''}
@@ -445,5 +445,6 @@ function RequestPage() {
 }
 
 export default RequestPage;
+
 
 

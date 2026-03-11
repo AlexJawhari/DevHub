@@ -6,6 +6,7 @@ ALTER TABLE request_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE monitored_endpoints ENABLE ROW LEVEL SECURITY;
 ALTER TABLE monitoring_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE security_scans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE security_schedules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE security_findings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ssl_certificates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE environments ENABLE ROW LEVEL SECURITY;
@@ -88,6 +89,18 @@ CREATE POLICY "Users can create their own security scans" ON security_scans FOR 
 DROP POLICY IF EXISTS "Users can update their own security scans" ON security_scans;
 CREATE POLICY "Users can update their own security scans" ON security_scans FOR UPDATE USING (auth.uid() = user_id);
 
+-- Security Schedules
+DROP POLICY IF EXISTS "Users can view their own security schedules" ON security_schedules;
+CREATE POLICY "Users can view their own security schedules" ON security_schedules FOR SELECT USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can create their own security schedules" ON security_schedules;
+CREATE POLICY "Users can create their own security schedules" ON security_schedules FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can update their own security schedules" ON security_schedules;
+CREATE POLICY "Users can update their own security schedules" ON security_schedules FOR UPDATE USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can delete their own security schedules" ON security_schedules;
+CREATE POLICY "Users can delete their own security schedules" ON security_schedules FOR DELETE USING (auth.uid() = user_id);
 -- Security Findings
 DROP POLICY IF EXISTS "Users can view findings for their scans" ON security_findings;
 CREATE POLICY "Users can view findings for their scans" ON security_findings FOR SELECT USING (
@@ -114,3 +127,4 @@ CREATE POLICY "Users can update their own environments" ON environments FOR UPDA
 
 DROP POLICY IF EXISTS "Users can delete their own environments" ON environments;
 CREATE POLICY "Users can delete their own environments" ON environments FOR DELETE USING (auth.uid() = user_id);
+

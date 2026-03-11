@@ -91,6 +91,20 @@ CREATE TABLE security_scans (
   completed_at TIMESTAMP
 );
 
+-- Security schedules table
+CREATE TABLE security_schedules (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  name VARCHAR(120) NOT NULL,
+  target_url TEXT NOT NULL,
+  scan_type VARCHAR(50) NOT NULL DEFAULT 'full',
+  interval_minutes INTEGER NOT NULL DEFAULT 1440,
+  is_active BOOLEAN DEFAULT TRUE,
+  last_run_at TIMESTAMP,
+  next_run_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
 -- Security findings table
 CREATE TABLE security_findings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -139,6 +153,8 @@ CREATE INDEX idx_monitoring_results_endpoint ON monitoring_results(endpoint_id);
 CREATE INDEX idx_monitoring_results_checked ON monitoring_results(checked_at);
 CREATE INDEX idx_security_scans_user ON security_scans(user_id);
 CREATE INDEX idx_security_scans_status ON security_scans(status);
+CREATE INDEX idx_security_schedules_user ON security_schedules(user_id);
+CREATE INDEX idx_security_schedules_next ON security_schedules(next_run_at);
 CREATE INDEX idx_security_findings_scan ON security_findings(scan_id);
 CREATE INDEX idx_security_findings_severity ON security_findings(severity);
 CREATE INDEX idx_environments_user ON environments(user_id);
@@ -152,6 +168,7 @@ ALTER TABLE request_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE monitored_endpoints ENABLE ROW LEVEL SECURITY;
 ALTER TABLE monitoring_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE security_scans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE security_schedules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE security_findings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ssl_certificates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE environments ENABLE ROW LEVEL SECURITY;
@@ -219,6 +236,18 @@ CREATE POLICY "Users can view results for their endpoints" ON monitoring_results
     )
   );
 
+-- Security schedules policies
+CREATE POLICY "Users can view their own security schedules" ON security_schedules
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can create their own security schedules" ON security_schedules
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their own security schedules" ON security_schedules
+  FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete their own security schedules" ON security_schedules
+  FOR DELETE USING (auth.uid() = user_id);
 -- Security scans policies
 CREATE POLICY "Users can view their own security scans" ON security_scans
   FOR SELECT USING (auth.uid() = user_id);
@@ -255,3 +284,4 @@ CREATE POLICY "Users can update their own environments" ON environments
 
 CREATE POLICY "Users can delete their own environments" ON environments
   FOR DELETE USING (auth.uid() = user_id);
+

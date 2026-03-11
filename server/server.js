@@ -14,7 +14,7 @@ const environmentRoutes = require('./routes/environments.routes');
 const reportRoutes = require('./routes/reports.routes');
 
 const errorHandler = require('./middleware/errorHandler');
-const { initMonitoringJobs } = require('./jobs/monitoringJobs');
+const { initMonitoringJobs } = require('./jobs/monitoringJobs');\nconst { initSecurityScanJobs } = require('./jobs/securityScanJobs');
 
 const app = express();
 // Trust proxy is required for rate limiting behind proxies (Render/Vercel)
@@ -102,7 +102,8 @@ server.listen(PORT, () => {
     console.log(`DevHub server running on port ${PORT}`);
 
     // Initialize monitoring cron jobs
-    initMonitoringJobs(io);
+    initMonitoringJobs(io);\n    initSecurityScanJobs();
 });
 
 module.exports = { app, io };
+

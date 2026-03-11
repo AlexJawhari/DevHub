@@ -23,10 +23,10 @@ function SettingsPage() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto space-y-8">
+        <div className="max-w-4xl mx-auto space-y-10">
             <h1 className="text-2xl font-bold">Settings</h1>
 
-            <div className="card space-y-8">
+            <div className="card space-y-10">
                 {/* Profile Settings */}
                 <section>
                     <h2 className="text-lg font-medium mb-4 flex items-center gap-2">
@@ -143,4 +143,5 @@ function SettingsPage() {
 }
 
 export default SettingsPage;
+
 

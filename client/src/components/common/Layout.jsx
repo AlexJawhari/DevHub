@@ -8,8 +8,8 @@ function Layout() {
             <Header />
             <div className="flex flex-1">
                 <Sidebar />
-                <main className="flex-1 p-6 lg:p-10 overflow-auto">
-                    <div className="max-w-7xl mx-auto w-full">
+                <main className="flex-1 p-6 lg:p-12 overflow-auto text-left">
+                    <div className="max-w-[1400px] mx-auto w-full">
                         <Outlet />
                     </div>
                 </main>
@@ -19,3 +19,5 @@ function Layout() {
 }
 
 export default Layout;
+
+

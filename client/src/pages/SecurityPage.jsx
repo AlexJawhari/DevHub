@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { FiShield, FiSearch, FiAlertTriangle, FiCheck, FiInfo, FiDownload } from 'react-icons/fi';
+import { useState, useEffect } from 'react';
+import { FiShield, FiSearch, FiAlertTriangle, FiCheck, FiInfo, FiClock, FiPlay, FiPause, FiTrash2, FiPlus } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { securityAPI } from '../services/api';
+import { useAuthStore } from '../store/authStore';
 
 const SEVERITY_STYLES = {
     critical: 'severity-critical',
@@ -19,11 +20,46 @@ const SEVERITY_ICONS = {
     info: FiInfo
 };
 
+const INTERVAL_OPTIONS = [
+    { value: 60, label: 'Hourly' },
+    { value: 360, label: 'Every 6 hours' },
+    { value: 1440, label: 'Daily' },
+    { value: 10080, label: 'Weekly' }
+];
+
 function SecurityPage() {
+    const { user } = useAuthStore();
     const [url, setUrl] = useState('');
     const [scanType, setScanType] = useState('full');
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState(null);
+
+    const [schedules, setSchedules] = useState([]);
+    const [scheduleLoading, setScheduleLoading] = useState(false);
+    const [scheduleForm, setScheduleForm] = useState({
+        name: '',
+        url: '',
+        scanType: 'full',
+        intervalMinutes: 1440
+    });
+    const [runningScheduleId, setRunningScheduleId] = useState(null);
+
+    useEffect(() => {
+        if (user) {
+            fetchSchedules();
+        } else {
+            setSchedules([]);
+        }
+    }, [user]);
+
+    const fetchSchedules = async () => {
+        try {
+            const response = await securityAPI.getSchedules();
+            setSchedules(response.data.schedules || []);
+        } catch (error) {
+            toast.error('Failed to load scheduled scans');
+        }
+    };
 
     const handleScan = async () => {
         if (!url) {
@@ -31,7 +67,6 @@ function SecurityPage() {
             return;
         }
 
-        // Basic URL validation
         try {
             new URL(url);
         } catch {
@@ -61,6 +96,74 @@ function SecurityPage() {
         }
     };
 
+    const handleCreateSchedule = async () => {
+        if (!scheduleForm.name.trim()) {
+            toast.error('Please enter a name for this scan');
+            return;
+        }
+        if (!scheduleForm.url) {
+            toast.error('Please enter a URL to scan');
+            return;
+        }
+
+        try {
+            new URL(scheduleForm.url);
+        } catch {
+            toast.error('Please enter a valid URL');
+            return;
+        }
+
+        setScheduleLoading(true);
+        try {
+            await securityAPI.createSchedule({
+                name: scheduleForm.name,
+                url: scheduleForm.url,
+                scanType: scheduleForm.scanType,
+                intervalMinutes: scheduleForm.intervalMinutes
+            });
+            toast.success('Scheduled scan created');
+            setScheduleForm({ name: '', url: '', scanType: 'full', intervalMinutes: 1440 });
+            fetchSchedules();
+        } catch (error) {
+            toast.error(error.response?.data?.error || 'Failed to create schedule');
+        } finally {
+            setScheduleLoading(false);
+        }
+    };
+
+    const handleToggleSchedule = async (schedule) => {
+        try {
+            await securityAPI.updateSchedule(schedule.id, { is_active: !schedule.is_active });
+            fetchSchedules();
+        } catch (error) {
+            toast.error('Failed to update schedule');
+        }
+    };
+
+    const handleRunSchedule = async (schedule) => {
+        setRunningScheduleId(schedule.id);
+        try {
+            await securityAPI.runSchedule(schedule.id);
+            toast.success('Scheduled scan triggered');
+            fetchSchedules();
+        } catch (error) {
+            toast.error(error.response?.data?.error || 'Failed to run scan');
+        } finally {
+            setRunningScheduleId(null);
+        }
+    };
+
+    const handleDeleteSchedule = async (scheduleId) => {
+        if (!confirm('Delete this scheduled scan?')) return;
+        try {
+            await securityAPI.deleteSchedule(scheduleId);
+            toast.success('Scheduled scan deleted');
+            fetchSchedules();
+        } catch (error) {
+            toast.error('Failed to delete schedule');
+        }
+    };
+
     const getScoreColor = (score) => {
         if (score >= 80) return 'text-green-500';
         if (score >= 60) return 'text-amber-500';
@@ -76,81 +179,231 @@ function SecurityPage() {
         return 'Critical';
     };
 
+    const formatInterval = (minutes) => {
+        const match = INTERVAL_OPTIONS.find((option) => option.value === minutes);
+        return match ? match.label : `${minutes} min`;
+    };
+
     return (
         <div className="max-w-6xl mx-auto space-y-12">
-            <div className="text-center mb-12">
+            <div className="text-center mb-8">
                 <h1 className="text-2xl font-bold">Security Scanner</h1>
+                <p className="text-slate-300 mt-2">Scan any URL for OWASP 2025 vulnerabilities, headers, SSL, and misconfigurations.</p>
             </div>
 
             {/* Scan Form */}
             <div className="card">
-                <div className="flex flex-col gap-6">
-                    <div className="flex flex-col md:flex-row gap-4">
+                <div className="space-y-6">
+                    <div className="flex flex-col xl:flex-row gap-4">
                         <div className="flex-1 relative group">
                             <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-400 transition-colors" />
                             <input
                                 type="text"
                                 value={url}
                                 onChange={(e) => setUrl(e.target.value)}
-                                placeholder="Enter URL to scan (e.g., https://example.com)"
-                                className="input-field text-base py-3.5 pl-12 pr-4 rounded-xl bg-slate-800/50 shadow-sm"
+                                placeholder="Enter URL to scan (https://example.com)"
+                                className="input-field text-base py-4 pl-12 pr-4 rounded-2xl bg-slate-800/50 shadow-sm"
                                 onKeyDown={(e) => e.key === 'Enter' && handleScan()}
                             />
                         </div>
 
-                        <div className="relative min-w-[200px]">
-                            <select
-                                value={scanType}
-                                onChange={(e) => setScanType(e.target.value)}
-                                className="input-field py-3.5 rounded-xl bg-slate-800/50 appearance-none cursor-pointer hover:border-slate-600 transition-colors"
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <div className="relative w-full sm:w-48">
+                                <select
+                                    value={scanType}
+                                    onChange={(e) => setScanType(e.target.value)}
+                                    className="input-field py-3.5 rounded-xl bg-slate-800/50 appearance-none cursor-pointer hover:border-slate-600 transition-colors"
+                                >
+                                    <option value="full">Full Scan</option>
+                                    <option value="headers">Headers Only</option>
+                                    <option value="ssl">SSL Only</option>
+                                    <option value="vulnerabilities">Vulnerabilities</option>
+                                </select>
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-xs">v</div>
+                            </div>
+                            <button
+                                onClick={handleScan}
+                                disabled={loading}
+                                className="btn-primary px-8 py-3.5 flex items-center justify-center gap-2 text-base font-medium shadow-lg shadow-blue-500/20"
                             >
-                                <option value="full">Full Scan</option>
-                                <option value="headers">Headers Only</option>
-                                <option value="ssl">SSL Only</option>
-                                <option value="vulnerabilities">Vulnerabilities</option>
-                            </select>
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-xs">v</div>
+                                {loading ? (
+                                    <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                ) : (
+                                    <>
+                                        <FiShield className="text-xl" />
+                                        Start Security Scan
+                                    </>
+                                )}
+                            </button>
                         </div>
                     </div>
 
-                    <button
-                        onClick={handleScan}
-                        disabled={loading}
-                        className="w-full md:w-auto self-end btn-primary px-8 py-3 flex items-center justify-center gap-2 text-lg font-medium shadow-lg shadow-blue-500/20"
-                    >
-                        {loading ? (
-                            <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        ) : (
-                            <>
-                                <FiShield className="text-xl" />
-                                Start Security Scan
-                            </>
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-sm text-slate-300">
+                        <span>Scans for OWASP Top 10 (2025), security headers, SSL/TLS configuration, and more.</span>
+                        {loading && (
+                            <span className="inline-flex items-center gap-2 text-blue-300">
+                                <span className="h-2 w-2 rounded-full bg-blue-400 animate-pulse" />
+                                Scan in progress...
+                            </span>
                         )}
-                    </button>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {[
+                            { key: 'full', label: 'Full Scan', desc: 'Headers + SSL + Vulnerabilities + CORS' },
+                            { key: 'headers', label: 'Headers Only', desc: 'Security header analysis' },
+                            { key: 'ssl', label: 'SSL Only', desc: 'Certificate and TLS validation' },
+                            { key: 'vulnerabilities', label: 'Vulnerabilities', desc: 'SQLi, XSS, sensitive data exposure' }
+                        ].map((t) => (
+                            <div
+                                key={t.key}
+                                onClick={() => setScanType(t.key)}
+                                className={`p-4 rounded-lg border cursor-pointer transition-all text-left ${scanType === t.key
+                                    ? 'bg-purple-500/15 border-purple-500/50 text-purple-300'
+                                    : 'border-slate-700 hover:border-slate-600 text-slate-300'
+                                    }`}
+                            >
+                                <div className="text-sm font-medium">{t.label}</div>
+                                <div className="text-xs mt-1 opacity-70">{t.desc}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Scheduled Scans */}
+            <div className="card space-y-6">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                    <div>
+                        <h2 className="text-lg font-semibold">Scheduled Vulnerability Scans</h2>
+                        <p className="text-sm text-slate-300">Save targets and automatically run scans on a schedule.</p>
+                    </div>
+                    {!user && (
+                        <div className="text-sm text-slate-400 bg-slate-900/40 border border-slate-800/60 px-3 py-2 rounded-lg">
+                            Sign in to save targets and schedule scans.
+                        </div>
+                    )}
                 </div>
 
-                <p className="text-sm text-slate-300">
-                    Scans for OWASP Top 10 (2025) vulnerabilities, security headers, SSL/TLS configuration, and more.
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
-                    {[
-                        { key: 'full', label: 'Full Scan', desc: 'Headers + SSL + Vulnerabilities + CORS' },
-                        { key: 'headers', label: 'Headers Only', desc: 'Security header analysis' },
-                        { key: 'ssl', label: 'SSL Only', desc: 'Certificate & TLS validation' },
-                        { key: 'vulnerabilities', label: 'Vulnerabilities', desc: 'SQLi, XSS, sensitive data exposure' }
-                    ].map((t) => (
-                        <div
-                            key={t.key}
-                            onClick={() => setScanType(t.key)}
-                            className={`p-3 rounded-lg border cursor-pointer transition-all text-center ${scanType === t.key
-                                ? 'bg-purple-500/15 border-purple-500/50 text-purple-300'
-                                : 'border-slate-700 hover:border-slate-600 text-slate-300'
-                                }`}
-                        >
-                            <div className="text-sm font-medium">{t.label}</div>
-                            <div className="text-xs mt-1 opacity-70">{t.desc}</div>
+                <div className="grid lg:grid-cols-2 gap-4">
+                    <div className="space-y-4">
+                        <div className="grid gap-3">
+                            <input
+                                type="text"
+                                value={scheduleForm.name}
+                                onChange={(e) => setScheduleForm({ ...scheduleForm, name: e.target.value })}
+                                placeholder="Scan name (e.g., Production API)"
+                                className="input-field"
+                                disabled={!user}
+                            />
+                            <input
+                                type="text"
+                                value={scheduleForm.url}
+                                onChange={(e) => setScheduleForm({ ...scheduleForm, url: e.target.value })}
+                                placeholder="https://api.example.com"
+                                className="input-field"
+                                disabled={!user}
+                            />
+                            <div className="grid sm:grid-cols-2 gap-3">
+                                <select
+                                    value={scheduleForm.scanType}
+                                    onChange={(e) => setScheduleForm({ ...scheduleForm, scanType: e.target.value })}
+                                    className="input-field"
+                                    disabled={!user}
+                                >
+                                    <option value="full">Full Scan</option>
+                                    <option value="headers">Headers Only</option>
+                                    <option value="ssl">SSL Only</option>
+                                    <option value="vulnerabilities">Vulnerabilities</option>
+                                </select>
+                                <select
+                                    value={scheduleForm.intervalMinutes}
+                                    onChange={(e) => setScheduleForm({ ...scheduleForm, intervalMinutes: Number(e.target.value) })}
+                                    className="input-field"
+                                    disabled={!user}
+                                >
+                                    {INTERVAL_OPTIONS.map((option) => (
+                                        <option key={option.value} value={option.value}>{option.label}</option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
-                    ))}
+                        <button
+                            onClick={handleCreateSchedule}
+                            disabled={!user || scheduleLoading}
+                            className="btn-primary w-full flex items-center justify-center gap-2"
+                        >
+                            {scheduleLoading ? (
+                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            ) : (
+                                <>
+                                    <FiPlus />
+                                    Save Scheduled Scan
+                                </>
+                            )}
+                        </button>
+                    </div>
+
+                    <div className="space-y-3">
+                        {schedules.length === 0 ? (
+                            <div className="h-full flex items-center justify-center border border-dashed border-slate-700 rounded-xl p-6 text-slate-400 text-sm">
+                                No scheduled scans yet.
+                            </div>
+                        ) : (
+                            schedules.map((schedule) => (
+                                <div key={schedule.id} className="p-4 rounded-xl border border-slate-700 bg-slate-900/40 space-y-3">
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div>
+                                            <h3 className="font-semibold">{schedule.name}</h3>
+                                            <p className="text-xs text-slate-300 mt-1">{schedule.target_url}</p>
+                                            <div className="flex flex-wrap gap-2 text-xs text-slate-400 mt-2">
+                                                <span className="inline-flex items-center gap-1"><FiShield /> {schedule.scan_type}</span>
+                                                <span className="inline-flex items-center gap-1"><FiClock /> {formatInterval(schedule.interval_minutes)}</span>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => handleToggleSchedule(schedule)}
+                                            className={`text-xs px-2 py-1 rounded-full ${schedule.is_active ? 'bg-green-500/20 text-green-300' : 'bg-slate-700 text-slate-300'}`}
+                                        >
+                                            {schedule.is_active ? 'Active' : 'Paused'}
+                                        </button>
+                                    </div>
+                                    <div className="text-xs text-slate-400 space-y-1">
+                                        <div>Last run: {schedule.last_run_at ? new Date(schedule.last_run_at).toLocaleString() : 'Never'}</div>
+                                        <div>Next run: {schedule.next_run_at ? new Date(schedule.next_run_at).toLocaleString() : 'Pending'}</div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => handleRunSchedule(schedule)}
+                                            className="btn-secondary flex items-center gap-2 text-xs"
+                                            disabled={runningScheduleId === schedule.id}
+                                        >
+                                            {runningScheduleId === schedule.id ? (
+                                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                            ) : (
+                                                <FiPlay />
+                                            )}
+                                            Run Now
+                                        </button>
+                                        <button
+                                            onClick={() => handleToggleSchedule(schedule)}
+                                            className="btn-ghost flex items-center gap-2 text-xs"
+                                        >
+                                            {schedule.is_active ? <FiPause /> : <FiPlay />}
+                                            {schedule.is_active ? 'Pause' : 'Resume'}
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteSchedule(schedule.id)}
+                                            className="btn-ghost flex items-center gap-2 text-xs text-red-300 hover:text-red-200"
+                                        >
+                                            <FiTrash2 />
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -286,4 +539,3 @@ function SecurityPage() {
 }
 
 export default SecurityPage;
-

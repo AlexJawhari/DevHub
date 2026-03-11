@@ -90,6 +90,11 @@ export const securityAPI = {
     scan: (data) => api.post('/security/scan', data),
     getScans: () => api.get('/security/scans'),
     getScan: (id) => api.get(`/security/scans/${id}`),
+    getSchedules: () => api.get('/security/schedules'),
+    createSchedule: (data) => api.post('/security/schedules', data),
+    updateSchedule: (id, data) => api.put(`/security/schedules/${id}`, data),
+    deleteSchedule: (id) => api.delete(`/security/schedules/${id}`),
+    runSchedule: (id) => api.post(`/security/schedules/${id}/run`),
     checkHeaders: (data) => api.post('/security/headers', data),
     checkSSL: (data) => api.post('/security/ssl', data),
     analyzeJWT: (data) => api.post('/security/jwt', data),
@@ -113,3 +118,6 @@ export const environmentsAPI = {
 };
 
 export default api;
+
+
+
