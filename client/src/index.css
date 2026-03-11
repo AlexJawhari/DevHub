@@ -68,6 +68,7 @@ body {
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
+  pointer-events: none;
 }
 
 /* Radial background accent */
@@ -121,7 +122,7 @@ body {
 
 /* Method select base */
 .method-select {
-  @apply min-h-11 px-4 py-2.5 rounded-xl font-semibold border border-slate-700/60 bg-transparent;
+  @apply min-h-[44px] px-4 py-2.5 rounded-xl font-semibold border border-slate-700/60 bg-transparent;
 }
 
 /* HTTP method colors */
@@ -152,24 +153,24 @@ body {
 
 /* Button styles */
 .btn-primary {
-  @apply px-4 py-2.5 min-h-11 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg font-medium transition-all hover:opacity-90 hover:scale-105 active:scale-95;
+  @apply px-4 py-2.5 min-h-[44px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg font-medium transition-all hover:opacity-90 hover:scale-105 active:scale-95;
 }
 
 .btn-secondary {
-  @apply px-4 py-2.5 min-h-11 bg-slate-700 hover:bg-slate-600 rounded-lg font-medium transition-all;
+  @apply px-4 py-2.5 min-h-[44px] bg-slate-700 hover:bg-slate-600 rounded-lg font-medium transition-all;
 }
 
 .btn-danger {
-  @apply px-4 py-2.5 min-h-11 bg-red-600 hover:bg-red-500 rounded-lg font-medium transition-all;
+  @apply px-4 py-2.5 min-h-[44px] bg-red-600 hover:bg-red-500 rounded-lg font-medium transition-all;
 }
 
 .btn-ghost {
-  @apply px-4 py-2.5 min-h-11 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all;
+  @apply px-4 py-2.5 min-h-[44px] rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all;
 }
 
 /* Input styles */
 .input-field {
-  @apply w-full px-4 py-2.5 min-h-11 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all;
+  @apply w-full px-4 py-2.5 min-h-[44px] bg-slate-800 border border-slate-600 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all;
 }
 
 /* Card styles */
@@ -205,4 +206,6 @@ body {
 .animate-slide-up {
   animation: slide-up 0.3s ease-out;
 }
+
+
 
