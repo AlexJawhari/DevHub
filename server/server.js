@@ -14,7 +14,8 @@ const environmentRoutes = require('./routes/environments.routes');
 const reportRoutes = require('./routes/reports.routes');
 
 const errorHandler = require('./middleware/errorHandler');
-const { initMonitoringJobs } = require('./jobs/monitoringJobs');\nconst { initSecurityScanJobs } = require('./jobs/securityScanJobs');
+const { initMonitoringJobs } = require('./jobs/monitoringJobs');
+const { initSecurityScanJobs } = require('./jobs/securityScanJobs');
 
 const app = express();
 // Trust proxy is required for rate limiting behind proxies (Render/Vercel)
@@ -106,4 +107,5 @@ server.listen(PORT, () => {
 });
 
 module.exports = { app, io };
+
 
