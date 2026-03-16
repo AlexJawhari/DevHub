@@ -55,4 +55,3 @@ Security is at the core of DevHub. The platform itself implements:
 
 ---
 
-*Built by [Alex Jawhari](https://github.com/AlexJawhari)*
