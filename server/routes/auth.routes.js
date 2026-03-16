@@ -84,8 +84,17 @@ router.post('/register', registerValidation, async (req, res) => {
             token
         });
     } catch (error) {
-        console.error('Registration error:', error);
-        res.status(500).json({ error: 'Registration failed' });
+        console.error('Registration error detail:', {
+            message: error.message,
+            code: error.code,
+            details: error.details,
+            hint: error.hint,
+            stack: error.stack
+        });
+        res.status(500).json({ 
+            error: 'Registration failed', 
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined 
+        });
     }
 });
 

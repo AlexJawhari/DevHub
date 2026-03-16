@@ -44,6 +44,15 @@ app.set('io', io);
 
 // Security middleware
 app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+            "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://vercel.live"],
+            "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            "font-src": ["'self'", "https://fonts.gstatic.com", "data:"],
+            "connect-src": ["'self'", "https://devhub-ndjh.onrender.com", "https://vitals.vercel-insights.com"]
+        },
+    },
     crossOriginResourcePolicy: { policy: 'cross-origin' },
     hidePoweredBy: true
 }));
