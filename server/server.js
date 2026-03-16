@@ -44,8 +44,16 @@ app.set('io', io);
 
 // Security middleware
 app.use(helmet({
-    crossOriginResourcePolicy: { policy: 'cross-origin' }
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    hidePoweredBy: true
 }));
+
+// Custom middleware to further obfuscate/remove headers
+app.use((req, res, next) => {
+    res.removeHeader('X-Powered-By');
+    res.setHeader('Server', 'Web Server'); // Obfuscate Vercel/Express
+    next();
+});
 
 // CORS configuration
 app.use(cors({

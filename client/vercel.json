@@ -5,6 +5,68 @@
             "destination": "/index.html"
         }
     ],
+    "redirects": [
+        {
+            "source": "/config.json",
+            "destination": "/404",
+            "permanent": false
+        },
+        {
+            "source": "/wp-config.php",
+            "destination": "/404",
+            "permanent": false
+        },
+        {
+            "source": "/admin",
+            "destination": "/404",
+            "permanent": false
+        },
+        {
+            "source": "/debug",
+            "destination": "/404",
+            "permanent": false
+        },
+        {
+            "source": "/.htaccess",
+            "destination": "/404",
+            "permanent": false
+        },
+        {
+            "source": "/backup.sql",
+            "destination": "/404",
+            "permanent": false
+        },
+        {
+            "source": "/composer.json",
+            "destination": "/404",
+            "permanent": false
+        },
+        {
+            "source": "/requirements.txt",
+            "destination": "/404",
+            "permanent": false
+        },
+        {
+            "source": "/go.sum",
+            "destination": "/404",
+            "permanent": false
+        },
+        {
+            "source": "/node_modules/.package-lock.json",
+            "destination": "/404",
+            "permanent": false
+        },
+        {
+            "source": "/.npmrc",
+            "destination": "/404",
+            "permanent": false
+        },
+        {
+            "source": "/.yarnrc",
+            "destination": "/404",
+            "permanent": false
+        }
+    ],
     "headers": [
         {
             "source": "/(.*)",
@@ -36,6 +98,10 @@
                 {
                     "key": "Content-Security-Policy",
                     "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://devhub-ndjh.onrender.com https://vitals.vercel-insights.com;"
+                },
+                {
+                    "key": "Server",
+                    "value": "Web Server"
                 }
             ]
         }
