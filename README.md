@@ -96,5 +96,3 @@ DevHub follows industry-best practices for platform security:
 MIT
 
 ---
-
-*Architected and Built by **[Alex Jawhari](https://github.com/AlexJawhari)***
