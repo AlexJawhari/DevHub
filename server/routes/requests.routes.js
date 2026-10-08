@@ -1,42 +1,12 @@
 const express = require('express');
-const axios = require('axios');
+const { safeHttp: axios } = require('../lib/safeHttp');
+const { isAllowedUrl } = require('../lib/egressGuard');
 const { body, validationResult } = require('express-validator');
 const { supabase } = require('../config/database');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { proxyLimiter } = require('../middleware/rateLimiter');
 
 const router = express.Router();
-
-// URL validation to prevent SSRF
-const isValidUrl = (urlString) => {
-    try {
-        const url = new URL(urlString);
-
-        // Block internal/private IPs
-        const hostname = url.hostname.toLowerCase();
-        if (
-            hostname === 'localhost' ||
-            hostname === '127.0.0.1' ||
-            hostname === '0.0.0.0' ||
-            hostname.startsWith('192.168.') ||
-            hostname.startsWith('10.') ||
-            hostname.startsWith('172.16.') ||
-            hostname.endsWith('.local') ||
-            hostname === '[::1]'
-        ) {
-            return false;
-        }
-
-        // Only allow http and https
-        if (!['http:', 'https:'].includes(url.protocol)) {
-            return false;
-        }
-
-        return true;
-    } catch {
-        return false;
-    }
-};
 
 // Proxy endpoint - execute HTTP request on behalf of client
 router.post('/proxy', proxyLimiter, optionalAuth, async (req, res) => {
@@ -53,7 +23,7 @@ router.post('/proxy', proxyLimiter, optionalAuth, async (req, res) => {
             normalizedUrl = 'https://' + normalizedUrl;
         }
 
-        if (!isValidUrl(normalizedUrl)) {
+        if (!isAllowedUrl(normalizedUrl)) {
             return res.status(400).json({
                 error: 'Invalid or blocked URL',
                 hint: 'Make sure the URL starts with http:// or https:// and points to a public server.'
@@ -121,6 +91,12 @@ router.post('/proxy', proxyLimiter, optionalAuth, async (req, res) => {
                 : JSON.stringify(responseData).length
         });
     } catch (error) {
+        if (error.code === 'EGRESS_BLOCKED') {
+            return res.status(400).json({
+                error: 'Invalid or blocked URL',
+                hint: 'Make sure the URL points to a public server.'
+            });
+        }
         if (error.code === 'ECONNABORTED') {
             return res.status(408).json({
                 error: 'Request timed out',

@@ -1,5 +1,5 @@
 const cron = require('node-cron');
-const axios = require('axios');
+const { safeHttp: axios } = require('../lib/safeHttp');
 const { supabase } = require('../config/database');
 
 let io = null;
