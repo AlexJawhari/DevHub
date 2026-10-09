@@ -1,4 +1,5 @@
-const axios = require('axios');
+const { safeHttp: axios } = require('../lib/safeHttp');
+const { assertPublicHost, safeLookup } = require('../lib/egressGuard');
 const tls = require('tls');
 const { URL } = require('url');
 
@@ -194,9 +195,11 @@ async function validateSSL(hostname, port = 443) {
         const findings = [];
 
         try {
+            assertPublicHost(hostname);
             const socket = tls.connect(port, hostname, {
                 rejectUnauthorized: false,
-                servername: hostname
+                servername: hostname,
+                lookup: safeLookup
             }, () => {
                 const cert = socket.getPeerCertificate();
                 const protocol = socket.getProtocol();
