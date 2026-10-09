@@ -4,7 +4,6 @@
 [![License](https://img.shields.io/badge/License-MIT-green)](#license)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js&logoColor=white)](https://nodejs.org)
-[![Socket.io](https://img.shields.io/badge/Socket.io-Realtime-010101?logo=socket.io)](https://socket.io)
 [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com)
 
 **DevHub** is an API testing and security-scanning platform: send requests like you would in Postman, then scan a site for common misconfigurations and OWASP-mapped issues.
@@ -19,7 +18,7 @@
 
 - **API Request Builder**: all HTTP methods, headers, query params, body and auth, with saved requests and environments.
 - **Security Scanner**: checks security headers, SSL/TLS, exposed sensitive files and endpoints, verbose errors, JWT weaknesses, and basic SQLi/XSS reflection signals. Findings are mapped to OWASP categories. These are heuristics, not a substitute for a professional penetration test.
-- **Scheduled Scans and Uptime Monitoring**: recurring checks (every few minutes for monitoring) with response-time charts and live updates over WebSockets.
+- **Scheduled Scans and Uptime Monitoring**: recurring checks (every few minutes for monitoring) with response-time charts.
 - **Reports**: export scan results as PDF or JSON with severity ratings and remediation steps.
 
 ---
@@ -30,7 +29,6 @@
 - **React 19 + Vite**
 - **Tailwind CSS v4**
 - **Zustand**: Lightweight, persistent global state management.
-- **Socket.io Client**: Real-time subscriptions for instant server health alerts.
 - **Recharts**: Dynamic data visualization for API performance metrics.
 
 ### **Backend**
