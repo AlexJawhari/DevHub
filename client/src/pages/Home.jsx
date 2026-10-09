@@ -19,7 +19,7 @@ const features = [
     {
         icon: FiActivity,
         title: 'Uptime Monitoring',
-        description: 'Monitor your APIs 24/7. Track response times, uptime percentages, and get instant alerts on downtime.',
+        description: 'Check your endpoints every few minutes. Track response times and uptime, and see downtime as it happens.',
         color: 'from-green-500 to-emerald-500'
     },
     {
@@ -40,13 +40,6 @@ const features = [
         description: 'Generate comprehensive security reports with risk scores, prioritized findings, and remediation advice.',
         color: 'from-indigo-500 to-violet-500'
     }
-];
-
-const stats = [
-    { value: '10,000+', label: 'Security Scans' },
-    { value: '200+', label: 'APIs Tested' },
-    { value: '94%', label: 'Detection Accuracy' },
-    { value: '3.2s', label: 'Avg Scan Time' }
 ];
 
 function Home() {
@@ -128,7 +121,7 @@ function Home() {
                                 step: '3',
                                 icon: FiActivity,
                                 title: 'Monitor',
-                                desc: 'Get notified immediately when your API goes down or becomes slow.',
+                                desc: 'See when your API goes down or becomes slow.',
                                 link: '/monitoring',
                                 cta: 'Set Up Monitor',
                                 tone: {
@@ -203,26 +196,6 @@ function Home() {
                             </div>
                         </div>
 
-                        <div className="flex-1 w-full relative">
-                            <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full" />
-                            <div className="relative card gradient-border p-8 bg-slate-900/90 backdrop-blur-xl">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h3 className="font-bold flex items-center gap-2">
-                                        <FiActivity className="text-green-400" />
-                                        Platform Stats
-                                    </h3>
-                                    <span className="text-xs text-slate-400 px-2 py-1 rounded bg-slate-800">Live</span>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    {stats.map((stat, index) => (
-                                        <div key={index} className="p-4 rounded-lg bg-slate-800/50 text-center">
-                                            <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
-                                            <div className="text-xs text-slate-300">{stat.label}</div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
