@@ -127,6 +127,7 @@ function RequestPage() {
             <div className="flex flex-col lg:flex-row gap-4">
                 <div className="flex flex-col sm:flex-row gap-3 flex-1">
                     <select
+                        aria-label="HTTP method"
                         value={method}
                         onChange={(e) => setMethod(e.target.value)}
                         className={`method-select ${METHOD_COLORS[method]} w-full sm:w-36 cursor-pointer transition-transform hover:scale-105 active:scale-95`}
@@ -202,6 +203,7 @@ function RequestPage() {
                                     <div key={index} className="flex gap-2 items-center">
                                         <input
                                             type="checkbox"
+                                            aria-label="Enable parameter"
                                             checked={param.enabled}
                                             onChange={(e) => updateQueryParam(index, 'enabled', e.target.checked)}
                                             className="w-4 h-4 rounded"
@@ -222,6 +224,7 @@ function RequestPage() {
                                         />
                                         <button
                                             onClick={() => removeQueryParam(index)}
+                                            aria-label="Remove parameter"
                                             className="p-2 text-slate-300 hover:text-red-400"
                                         >
                                             <FiTrash2 />
@@ -244,6 +247,7 @@ function RequestPage() {
                                     <div key={index} className="flex gap-2 items-center">
                                         <input
                                             type="checkbox"
+                                            aria-label="Enable header"
                                             checked={header.enabled}
                                             onChange={(e) => updateHeader(index, 'enabled', e.target.checked)}
                                             className="w-4 h-4 rounded"
@@ -265,6 +269,7 @@ function RequestPage() {
                                         />
                                         <button
                                             onClick={() => removeHeader(index)}
+                                            aria-label="Remove header"
                                             className="p-2 text-slate-300 hover:text-red-400"
                                         >
                                             <FiTrash2 />
@@ -311,6 +316,7 @@ function RequestPage() {
                         {activeTab === 'auth' && (
                             <div className="space-y-4">
                                 <select
+                                    aria-label="Authentication type"
                                     value={authType}
                                     onChange={(e) => setAuthType(e.target.value)}
                                     className="input-field"

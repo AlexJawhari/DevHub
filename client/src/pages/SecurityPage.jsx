@@ -210,6 +210,7 @@ function SecurityPage() {
                         <div className="flex flex-col sm:flex-row gap-3">
                             <div className="relative w-full sm:w-48">
                                 <select
+                                    aria-label="Scan type"
                                     value={scanType}
                                     onChange={(e) => setScanType(e.target.value)}
                                     className="input-field py-3.5 rounded-xl bg-slate-800/50 appearance-none cursor-pointer hover:border-slate-600 transition-colors"
@@ -306,6 +307,7 @@ function SecurityPage() {
                             />
                             <div className="grid sm:grid-cols-2 gap-3">
                                 <select
+                                    aria-label="Scheduled scan type"
                                     value={scheduleForm.scanType}
                                     onChange={(e) => setScheduleForm({ ...scheduleForm, scanType: e.target.value })}
                                     className="input-field"
@@ -317,6 +319,7 @@ function SecurityPage() {
                                     <option value="vulnerabilities">Vulnerabilities</option>
                                 </select>
                                 <select
+                                    aria-label="Scan interval"
                                     value={scheduleForm.intervalMinutes}
                                     onChange={(e) => setScheduleForm({ ...scheduleForm, intervalMinutes: Number(e.target.value) })}
                                     className="input-field"
