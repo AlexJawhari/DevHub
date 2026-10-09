@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const http = require('http');
 
 const authRoutes = require('./routes/auth.routes');
 const requestRoutes = require('./routes/requests.routes');
@@ -18,7 +17,6 @@ const cronRoutes = require('./routes/cron.routes');
 const app = express();
 // Trust proxy is required for rate limiting behind proxies (Render/Vercel)
 app.set('trust proxy', 1);
-const server = http.createServer(app);
 
 // Allowed origins
 const ALLOWED_ORIGINS = [
@@ -92,13 +90,9 @@ app.use((req, res) => {
 // Global error handler
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3000;
-
-server.listen(PORT, () => {
-    console.log(`DevHub server running on port ${PORT}`);
-});
+if (require.main === module) {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`DevHub server running on port ${PORT}`));
+}
 
 module.exports = { app };
-
-
-
