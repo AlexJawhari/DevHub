@@ -1,8 +1,5 @@
-const cron = require('node-cron');
 const { safeHttp: axios } = require('../lib/safeHttp');
 const { supabase } = require('../config/database');
-
-let io = null;
 
 /**
  * Check a single endpoint and record the result
@@ -33,17 +30,6 @@ async function checkEndpoint(endpoint) {
             });
         }
 
-        // Emit real-time update
-        if (io) {
-            io.emit('monitoring:update', {
-                endpointId: endpoint.id,
-                status: isUp ? 'up' : 'down',
-                statusCode: response.status,
-                responseTime,
-                checkedAt: new Date().toISOString()
-            });
-        }
-
         return { isUp, responseTime, statusCode: response.status };
     } catch (error) {
         const responseTime = Date.now() - startTime;
@@ -56,17 +42,6 @@ async function checkEndpoint(endpoint) {
                 response_time: responseTime,
                 is_up: false,
                 error_message: error.message
-            });
-        }
-
-        // Emit real-time update
-        if (io) {
-            io.emit('monitoring:update', {
-                endpointId: endpoint.id,
-                status: 'down',
-                error: error.message,
-                responseTime,
-                checkedAt: new Date().toISOString()
             });
         }
 
@@ -134,34 +109,8 @@ async function cleanupOldResults() {
     }
 }
 
-/**
- * Initialize monitoring cron jobs
- */
-function initMonitoringJobs(socketIo) {
-    io = socketIo;
-
-    // Run monitoring checks every 5 minutes
-    cron.schedule('*/5 * * * *', () => {
-        console.log('Cron: Running monitoring checks');
-        runMonitoringChecks();
-    });
-
-    // Clean up old results daily at midnight
-    cron.schedule('0 0 * * *', () => {
-        console.log('Cron: Cleaning up old monitoring results');
-        cleanupOldResults();
-    });
-
-    console.log('Monitoring jobs initialized');
-
-    // Run initial check after 10 seconds
-    setTimeout(() => {
-        runMonitoringChecks();
-    }, 10000);
-}
-
 module.exports = {
-    initMonitoringJobs,
+    cleanupOldResults,
     runMonitoringChecks,
     checkEndpoint
 };

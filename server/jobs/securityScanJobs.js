@@ -1,4 +1,3 @@
-const cron = require('node-cron');
 const { supabase } = require('../config/database');
 const { runSecurityScan } = require('../services/securityScanRunner');
 
@@ -92,20 +91,6 @@ async function runScheduledScans() {
     }
 }
 
-function initSecurityScanJobs() {
-    cron.schedule('*/5 * * * *', () => {
-        console.log('Cron: Running scheduled security scans');
-        runScheduledScans();
-    });
-
-    console.log('Security scan jobs initialized');
-
-    setTimeout(() => {
-        runScheduledScans();
-    }, 15000);
-}
-
 module.exports = {
-    initSecurityScanJobs,
     runScheduledScans
 };

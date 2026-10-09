@@ -3,7 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const http = require('http');
-const { Server } = require('socket.io');
 
 const authRoutes = require('./routes/auth.routes');
 const requestRoutes = require('./routes/requests.routes');
@@ -14,8 +13,7 @@ const environmentRoutes = require('./routes/environments.routes');
 const reportRoutes = require('./routes/reports.routes');
 
 const errorHandler = require('./middleware/errorHandler');
-const { initMonitoringJobs } = require('./jobs/monitoringJobs');
-const { initSecurityScanJobs } = require('./jobs/securityScanJobs');
+const cronRoutes = require('./routes/cron.routes');
 
 const app = express();
 // Trust proxy is required for rate limiting behind proxies (Render/Vercel)
@@ -29,18 +27,6 @@ const ALLOWED_ORIGINS = [
     'https://devhub-git-main-alexjawharis-projects.vercel.app',
     process.env.FRONTEND_URL
 ].filter(Boolean);
-
-// WebSocket setup for real-time updates
-const io = new Server(server, {
-    cors: {
-        origin: ALLOWED_ORIGINS,
-        methods: ['GET', 'POST'],
-        credentials: true
-    }
-});
-
-// Make io accessible to routes
-app.set('io', io);
 
 // Security middleware
 app.use(helmet({
@@ -96,6 +82,7 @@ app.use('/api/monitoring', monitoringRoutes);
 app.use('/api/security', securityRoutes);
 app.use('/api/environments', environmentRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/cron', cronRoutes);
 
 // 404 handler
 app.use((req, res) => {
@@ -105,26 +92,13 @@ app.use((req, res) => {
 // Global error handler
 app.use(errorHandler);
 
-// WebSocket connection handling
-io.on('connection', (socket) => {
-    console.log('Client connected:', socket.id);
-
-    socket.on('disconnect', () => {
-        console.log('Client disconnected:', socket.id);
-    });
-});
-
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
     console.log(`DevHub server running on port ${PORT}`);
-
-    // Initialize monitoring cron jobs
-    initMonitoringJobs(io);
-    initSecurityScanJobs();
 });
 
-module.exports = { app, io };
+module.exports = { app };
 
 
 
