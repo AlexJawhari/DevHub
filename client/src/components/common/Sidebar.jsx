@@ -31,6 +31,7 @@ function Sidebar() {
                     <NavLink
                         key={item.path}
                         to={item.path}
+                        aria-label={item.label}
                         className={({ isActive }) =>
                             `flex items-center lg:justify-start justify-center gap-3 px-3 py-3 rounded-xl text-[15px] font-medium transition-all ${isActive
                                 ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border-l-2 border-blue-500 shadow-sm'
@@ -48,6 +49,7 @@ function Sidebar() {
                 <div className="px-2.5 mt-auto pt-4 border-t border-slate-700/60">
                     <NavLink
                         to="/settings"
+                        aria-label="Settings"
                         className="flex items-center lg:justify-start justify-center gap-3 px-3 py-3 rounded-xl text-[15px] font-medium text-slate-300 hover:text-white hover:bg-slate-700/60 transition-all"
                     >
                         <FiSettings className="text-2xl shrink-0" />
