@@ -1,4 +1,10 @@
 {
-  "buildCommand": "npm run build",
-  "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
+  "services": {
+    "api": {
+      "root": ".",
+      "entrypoint": "api/index.js",
+      "buildCommand": "npm run build"
+    }
+  },
+  "rewrites": [{ "source": "/(.*)", "destination": { "service": "api" } }]
 }
