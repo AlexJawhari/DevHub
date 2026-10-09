@@ -12,7 +12,9 @@ import ReportsPage from './pages/ReportsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import SettingsPage from './pages/SettingsPage';
-import { useAuthStore } from './store/authStore';
+import { useAuthStore, syncSupabaseSession } from './store/authStore';
+
+syncSupabaseSession();
 
 function PrivateRoute({ children }) {
   const { token } = useAuthStore();
