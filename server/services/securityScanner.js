@@ -1,5 +1,6 @@
 const { safeHttp: axios } = require('../lib/safeHttp');
 const { assertPublicHost, safeLookup } = require('../lib/egressGuard');
+const { isLoginRejection } = require('../lib/scannerRules');
 const tls = require('tls');
 const { URL } = require('url');
 
@@ -52,12 +53,6 @@ const SECURITY_HEADERS = {
         severity: 'low',
         recommendation: 'Add a Permissions-Policy header to control browser features',
         description: 'Missing Permissions-Policy - browser features not explicitly controlled'
-    },
-    'x-xss-protection': {
-        name: 'X-XSS-Protection',
-        severity: 'info',
-        recommendation: 'Add: X-XSS-Protection: 1; mode=block (legacy browsers only)',
-        description: 'Missing X-XSS-Protection - legacy XSS filter not enabled'
     }
 };
 
@@ -581,13 +576,13 @@ async function scanAuthWeaknesses(url) {
                 response.headers['ratelimit-limit'] ||
                 response.headers['retry-after'];
 
-            if (response.status !== 404 && !hasRateLimit) {
+            if (isLoginRejection(response.status) && !hasRateLimit) {
                 findings.push({
                     category: 'authentication',
-                    severity: 'medium',
-                    title: 'Login Endpoint Missing Rate Limiting',
-                    description: `${path} does not appear to have rate limiting headers`,
-                    recommendation: 'Add rate limiting to authentication endpoints to prevent brute-force attacks',
+                    severity: 'info',
+                    title: 'No Rate-Limit Headers on Login Endpoint',
+                    description: `${path} rejected dummy credentials without rate-limit headers. This does not prove rate limiting is absent.`,
+                    recommendation: 'Confirm authentication endpoints are rate limited to prevent brute-force attacks',
                     owasp_category: 'A07',
                     cwe_id: 'CWE-307'
                 });
