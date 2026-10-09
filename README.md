@@ -7,73 +7,46 @@
 [![Socket.io](https://img.shields.io/badge/Socket.io-Realtime-010101?logo=socket.io)](https://socket.io)
 [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com)
 
-**DevHub** is a comprehensive API testing and security analysis platform designed to help developers test, monitor, and secure their APIs with industrial-grade precision. It bridges the gap between functional testing (Postman) and automated security auditing (OWASP scanning).
+**DevHub** is an API testing and security-scanning platform: send requests like you would in Postman, then scan a site for common misconfigurations and OWASP-mapped issues.
 
-🔗 **[Live Demo](https://devhub-steel.vercel.app)**
+🔗 **[Live Demo](https://devhub-steel.vercel.app)** (the backend runs on a free tier, so the first request after idle can take ~30s)
 
----
-
-## 🚀 The Build & Impact
-
-> "Built an API security testing platform with automated vulnerability scanning, SSL/TLS validation, security header analysis, and real-time endpoint monitoring. Optimized for high-accuracy detection of OWASP Top 10 vulnerabilities across 200+ endpoints."
-
-### **Key Achievements**
-- **Automated Security Auditing**: Implements deep-scan logic for 15+ security vulnerabilities including SQL Injection, XSS, SSRF, and sensitive data exposure.
-- **Real-Time Uptime Monitoring**: Engineered a high-performance monitoring engine using `node-cron` and `Socket.io` to provide 24/7 endpoint tracking with millisecond-accuracy latency reporting.
-- **Compliance-Ready Reporting**: Automated the generation of cryptographic-grade security audit reports in PDF and JSON formats, designed for compliance stakeholders.
-- **Secure-by-Design Architecture**: Leveraged Supabase Row Level Security (RLS), Bcrypt hashing, and strict input sanitization to ensure a zero-trust environment for user data.
+> Only scan sites you own or are authorized to test.
 
 ---
 
 ## ✨ Features
 
-- **Advanced API Request Builder** — A full-featured HTTP client supporting all methods, custom headers, environment variables, and body types for complex API interaction.
-- **OWASP Security Scanner** — Automated endpoint analysis detecting high-risk misconfigurations and vulnerabilities with 94%+ detection accuracy.
-- **24/7 Monitoring Dashboard** — Real-time uptime tracking and response time visualizations powered by WebSockets.
-- **Security Audit Reports** — Comprehensive exports documenting vulnerabilities, severity ratings, and actionable remediation steps.
-- **Team-Centric Workspaces** — Organize, save, and share API collections and environments across development teams.
-
----
-
-## 📸 Screenshots
-
-| Dashboard | Request Builder |
-|---|---|
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Request Builder](docs/screenshots/request-builder.png) |
-
-| Security Report | Monitoring |
-|---|---|
-| ![Security Report](docs/screenshots/security-report.png) | ![Monitoring](docs/screenshots/monitoring.png) |
+- **API Request Builder**: all HTTP methods, headers, query params, body and auth, with saved requests and environments.
+- **Security Scanner**: checks security headers, SSL/TLS, exposed sensitive files and endpoints, verbose errors, JWT weaknesses, and basic SQLi/XSS reflection signals. Findings are mapped to OWASP categories. These are heuristics, not a substitute for a professional penetration test.
+- **Scheduled Scans and Uptime Monitoring**: recurring checks (every few minutes for monitoring) with response-time charts and live updates over WebSockets.
+- **Reports**: export scan results as PDF or JSON with severity ratings and remediation steps.
 
 ---
 
 ## 🏗️ Technical Stack
 
 ### **Frontend**
-- **React 19 + Vite**: Next-generation SPA framework for ultra-fast HMR and performance.
-- **Tailwind CSS v4**: Modern utility-first styling for a sleek, responsive UI.
+- **React 19 + Vite**
+- **Tailwind CSS v4**
 - **Zustand**: Lightweight, persistent global state management.
 - **Socket.io Client**: Real-time subscriptions for instant server health alerts.
 - **Recharts**: Dynamic data visualization for API performance metrics.
 
 ### **Backend**
-- **Node.js + Express**: Scalable REST API architecture.
+- **Node.js + Express**: REST API.
 - **Supabase (PostgreSQL)**: Managed database with advanced RLS security policies.
 - **Node-Cron**: Reliable background task scheduling for monitoring jobs.
-- **Helmet + Bcrypt + JWT**: Hardened security layer for authentication and data protection.
+- **Helmet + JWT**: Security headers and token-based authentication.
 - **Express-Validator**: Multi-layer input sanitization for preventing injection attacks.
 
 ---
 
-## 🔒 Security Architecture
+## 🔒 Security
 
-DevHub follows industry-best practices for platform security:
-- **SSRF Hardening**: All outgoing scanner requests are proxied and validated to prevent internal network reconnaissance.
-- **Zero-Trust RLS**: Database policies prevent cross-tenant data access at the engine level.
-- **Automated Sanitization**: 100% of API inputs are sanitized before reaching controllers.
-- **Encrypted Transmission**: Enforced HSTS and CSP headers ensure secure communication.
-
----
+- **SSRF protection**: outbound requests to user-supplied URLs are blocked from private, loopback and link-local addresses, checked at connect time so DNS rebinding does not bypass it.
+- **Row Level Security** policies in `database/policies.sql` scope data per user.
+- **Input validation** with `express-validator`, rate limiting, and Helmet/CSP/HSTS headers.
 
 ## 🚀 Getting Started
 
