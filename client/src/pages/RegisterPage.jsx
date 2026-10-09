@@ -4,6 +4,8 @@ import { FiMail, FiLock, FiUser, FiArrowRight, FiShield, FiCheck, FiX } from 're
 import { toast } from 'react-toastify';
 import { authAPI } from '../services/api';
 import { useAuthStore } from '../store/authStore';
+import OAuthButtons from '../components/auth/OAuthButtons';
+import { supabase } from '../lib/supabase';
 
 function RegisterPage() {
     const navigate = useNavigate();
@@ -15,6 +17,7 @@ function RegisterPage() {
         password: '',
         confirmPassword: ''
     });
+    const [ageOk, setAgeOk] = useState(false);
     const [loading, setLoading] = useState(false);
 
     // Password strength checks
@@ -43,16 +46,29 @@ function RegisterPage() {
         setLoading(true);
 
         try {
-            const response = await authAPI.register({
-                username: formData.username,
-                email: formData.email,
-                password: formData.password
-            });
-            login(response.data.user, response.data.token);
+            if (supabase) {
+                const { data, error } = await supabase.auth.signUp({
+                    email: formData.email,
+                    password: formData.password,
+                    options: { data: { user_name: formData.username } }
+                });
+                if (error) throw new Error(error.message);
+                if (!data.session) {
+                    toast.success('Check your email to confirm your account.');
+                    return;
+                }
+            } else {
+                const response = await authAPI.register({
+                    username: formData.username,
+                    email: formData.email,
+                    password: formData.password
+                });
+                login(response.data.user, response.data.token);
+            }
             toast.success('Account created successfully!');
             navigate('/dashboard');
         } catch (error) {
-            const message = error.response?.data?.error || 'Registration failed';
+            const message = error.response?.data?.error || error.message || 'Registration failed';
             toast.error(message);
         } finally {
             setLoading(false);
@@ -82,6 +98,7 @@ function RegisterPage() {
                 </div>
 
                 <div className="card border-t-4 border-t-blue-500 shadow-xl shadow-blue-900/10">
+                    <OAuthButtons />
                     <form onSubmit={handleSubmit} className="space-y-5 p-2">
                         <div>
                             <label className="block text-sm font-medium text-slate-300 mb-2">
@@ -186,6 +203,17 @@ function RegisterPage() {
                                 />
                             </div>
                         </div>
+
+                        <label className="flex items-start gap-2 text-sm text-slate-300">
+                            <input
+                                type="checkbox"
+                                checked={ageOk}
+                                onChange={(e) => setAgeOk(e.target.checked)}
+                                className="mt-1"
+                                required
+                            />
+                            I am 13 or older
+                        </label>
 
                         <button
                             type="submit"

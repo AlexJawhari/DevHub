@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 import { authAPI } from '../services/api';
 import { useAuthStore } from '../store/authStore';
 import EducationModal from '../components/common/EducationModal';
+import OAuthButtons from '../components/auth/OAuthButtons';
+import { supabase } from '../lib/supabase';
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -22,12 +24,17 @@ function LoginPage() {
         setLoading(true);
 
         try {
-            const response = await authAPI.login(formData);
-            login(response.data.user, response.data.token);
+            if (supabase) {
+                const { error } = await supabase.auth.signInWithPassword(formData);
+                if (error) throw new Error(error.message);
+            } else {
+                const response = await authAPI.login(formData);
+                login(response.data.user, response.data.token);
+            }
             toast.success('Welcome back!');
             navigate('/dashboard');
         } catch (error) {
-            const message = error.response?.data?.error || 'Login failed';
+            const message = error.response?.data?.error || error.message || 'Login failed';
             toast.error(message);
         } finally {
             setLoading(false);
@@ -57,6 +64,7 @@ function LoginPage() {
                 </div>
 
                 <div className="card border-t-4 border-t-purple-500 shadow-xl shadow-purple-900/10">
+                    <OAuthButtons />
                     <form onSubmit={handleSubmit} className="space-y-6 p-2">
                         <div>
                             <label className="block text-sm font-medium text-slate-300 mb-2">
