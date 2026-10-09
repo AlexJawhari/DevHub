@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import { useAuthStore } from '../store/authStore';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
@@ -27,18 +28,42 @@ const api = axios.create({
 });
 
 // Add auth token to requests
+// The free-tier backend sleeps when idle and takes ~30s to wake; tell the user instead of showing a bare spinner.
+let slowCount = 0;
+let slowTimer = null;
+let slowToastId = null;
+const requestStarted = () => {
+    if (slowCount++ === 0) {
+        slowTimer = setTimeout(() => {
+            slowToastId = toast.info('Waking up the server (free tier). This can take up to 30 seconds.', { autoClose: false });
+        }, 4000);
+    }
+};
+const requestFinished = () => {
+    if (--slowCount === 0) {
+        clearTimeout(slowTimer);
+        if (slowToastId !== null) toast.dismiss(slowToastId);
+        slowToastId = null;
+    }
+};
+
 api.interceptors.request.use((config) => {
+    requestStarted();
     const token = useAuthStore.getState().token;
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
-});
+}, (error) => Promise.reject(error));
 
 // Handle errors globally
 api.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        requestFinished();
+        return response;
+    },
     (error) => {
+        requestFinished();
         if (error.response?.status === 401) {
             // Token expired or invalid
             useAuthStore.getState().logout();
