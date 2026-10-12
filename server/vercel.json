@@ -3,6 +3,7 @@
     "api": {
       "root": ".",
       "entrypoint": "api/index.js",
+      "installCommand": "npm ci",
       "buildCommand": "npm run build"
     }
   },
