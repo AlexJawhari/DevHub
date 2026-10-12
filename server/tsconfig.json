@@ -12,5 +12,5 @@
         "types": ["node"]
     },
     "include": ["**/*.ts", "**/*.js"],
-    "exclude": ["node_modules", "dist", "api"]
+    "exclude": ["node_modules", "dist"]
 }

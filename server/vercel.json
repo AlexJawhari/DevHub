@@ -2,7 +2,7 @@
   "services": {
     "api": {
       "root": ".",
-      "entrypoint": "api/index.js",
+      "entrypoint": "server.js",
       "installCommand": "npm ci",
       "buildCommand": "npm run build:vercel"
     }
