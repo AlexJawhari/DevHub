@@ -2,10 +2,17 @@
   "services": {
     "api": {
       "root": ".",
-      "entrypoint": "api/index.js",
+      "entrypoint": "dist/vercel.js",
       "installCommand": "npm ci",
-      "buildCommand": "npm run build"
+      "buildCommand": "npm run build:vercel"
     }
   },
-  "rewrites": [{ "source": "/(.*)", "destination": { "service": "api" } }]
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "api"
+      }
+    }
+  ]
 }
