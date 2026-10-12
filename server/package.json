@@ -9,7 +9,7 @@
     "dev": "tsx watch server.js",
     "typecheck": "tsc --noEmit",
     "test": "tsc && node --test \"dist/lib/*.test.js\"",
-    "build:vercel": "npm run build && esbuild server.js --bundle --platform=node --target=node22 --outfile=dist/vercel.js && mkdir -p public"
+    "build:vercel": "npm run build && esbuild server.js --bundle --platform=node --target=node22 --outfile=dist/vercel.js && mkdir -p public && echo DevHub API > public/index.txt"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.38.0",
