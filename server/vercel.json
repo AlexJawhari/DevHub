@@ -2,7 +2,7 @@
   "services": {
     "api": {
       "root": ".",
-      "entrypoint": "dist/vercel.js",
+      "entrypoint": "api/index.js",
       "installCommand": "npm ci",
       "buildCommand": "npm run build:vercel"
     }
